@@ -59,7 +59,6 @@
     .question-block { margin-bottom:16px; }
     .question-text { font-size:1.15rem; line-height:1.6; margin-bottom:12px; color:#e4f0ff; padding:14px; background:rgba(0,100,200,0.08); border-left:4px solid #2a8cff; border-radius:0 12px 12px 0; box-shadow:0 2px 10px rgba(0,0,0,0.3); }
     .question-hint { font-size:0.75rem; color:#6e99b8; margin:0 0 14px 0; display:flex; align-items:center; gap:6px; font-style:italic; background:rgba(0,0,0,0.2); padding:6px 12px; border-radius:12px; }
-    .question-hint::before { content:"💡"; font-size:1rem; }
 
     .options-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
     .option-item {
@@ -73,7 +72,10 @@
     .option-item.selected .option-indicator { background:#2a8cff; color:#081a24; box-shadow:0 0 12px #2a8cff; }
 
     .result-section { text-align:center; }
-    .result-score { font-size:3.8rem; font-weight:bold; background:linear-gradient(180deg, #dcf0ff 0%, #5da6ff 60%, #0a3c6e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:16px 0; text-shadow:0 0 20px #2a8cff; }
+    .result-score { font-size:3rem; font-weight:bold; background:linear-gradient(180deg, #dcf0ff 0%, #5da6ff 60%, #0a3c6e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:12px 0; text-shadow:0 0 20px #2a8cff; }
+    
+    .char-figure { margin: 5px auto; }
+    .char-figure svg { width: 80px; height: 100px; display: block; margin: 0 auto; }
 
     .social-links { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:18px 0; }
     .social-link { display:flex; align-items:center; gap:6px; background:rgba(8,24,36,0.7); border:1px solid rgba(70,130,180,0.6); border-radius:20px; padding:8px 16px; color:#b8d4ec; text-decoration:none; font-size:0.9rem; transition:all 0.2s; cursor:pointer; }
@@ -85,42 +87,63 @@
     .prize-modal { background:rgba(6,18,28,0.95); border:2px solid #2a8cff; border-radius:32px 8px 32px 8px; padding:24px; max-width:320px; width:100%; box-shadow:0 0 40px rgba(0,140,255,0.5); color:#c0e1ff; text-align:center; }
     .prize-modal h3 { font-size:1.6rem; margin-bottom:16px; background:linear-gradient(180deg, #e0f0ff, #5da6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:4px; }
     .prize-list { text-align:left; margin:18px 0; }
-    .prize-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed rgba(70,130,190,0.4); font-size:0.95rem; }
+    .prize-item { display:flex; flex-direction:column; padding:10px 0; border-bottom:1px dashed rgba(70,130,190,0.4); font-size:0.95rem; }
     .prize-item:last-child { border-bottom:none; }
-    .prize-level { color:#5da6ff; font-weight:bold; }
+    .prize-level { color:#5da6ff; font-weight:bold; margin-bottom:4px; }
     .prize-detail { color:#e0f0ff; }
+
+    .character-modal { max-width:360px; }
+    .char-card { background:rgba(0,20,40,0.5); border:1px solid rgba(0,160,255,0.3); border-radius:16px; padding:12px; margin:12px 0; text-align:left; display:flex; gap:12px; align-items:center; }
+    .char-card svg { width:60px; height:75px; flex-shrink:0; filter:drop-shadow(0 0 6px #2a8cff); }
+    .char-info { flex:1; }
+    .char-info h4 { color:#ffd966; font-size:1rem; margin-bottom:4px; }
+    .char-info .mbti-tag { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 10px; border-radius:12px; font-size:0.75rem; letter-spacing:2px; margin-bottom:6px; font-weight:bold; }
+    .char-info p { color:#b0cce5; font-size:0.8rem; line-height:1.4; }
 
     .poster-container { position:absolute; left:-9999px; top:0; width:400px; background:#0a1620; padding:28px; border:2px solid #2a8cff; border-radius:32px 8px 32px 8px; color:#c0e1ff; box-shadow:inset 0 0 30px rgba(0,160,255,0.2); }
     .poster-title { font-size:2rem; text-align:center; letter-spacing:6px; background:linear-gradient(180deg, #dcf0ff, #5da6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:bold; margin-bottom:8px; }
     .poster-badge { text-align:center; font-size:1.3rem; margin:12px 0; color:#5da6ff; font-weight:bold; letter-spacing:2px; }
-    .poster-desc { font-size:0.8rem; color:#8aaacc; text-align:center; margin:8px 0; }
 
     .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(0,10,20,0.9); border:1px solid #2a8cff; color:#e0f0ff; padding:10px 24px; border-radius:30px; z-index:999; font-size:0.95rem; opacity:0; transition:opacity 0.3s; pointer-events:none; }
     .toast.show { opacity:1; }
-
-    .title-card { background:rgba(0,20,40,0.5); border:1px solid rgba(0,160,255,0.4); border-radius:16px; padding:16px; margin:16px 0; text-align:left; }
-    .title-card h4 { color:#ffd966; font-size:1.1rem; margin-bottom:6px; }
+    
+    .title-card { background:rgba(0,20,40,0.5); border:1px solid rgba(0,160,255,0.4); border-radius:16px; padding:12px; margin:12px 0; text-align:left; }
     .title-card p { color:#b0cce5; font-size:0.9rem; line-height:1.5; }
-    .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 12px; border-radius:12px; font-weight:bold; font-size:0.85rem; letter-spacing:2px; margin:8px 0; }
-
-    /* 人物形象 SVG 容器 */
-    .char-figure { display:flex; justify-content:center; margin:10px 0; }
-    .char-figure svg { width:80px; height:100px; filter:drop-shadow(0 0 8px #2a8cff); }
+    .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 10px; border-radius:12px; font-size:0.75rem; letter-spacing:2px; margin:8px 0; font-weight:bold; }
   </style>
 </head>
 <body>
   <div class="app-container" id="appContainer">
     <div class="toast" id="toast"></div>
 
+    <!-- 奖品弹窗 -->
     <div class="prize-modal-overlay hidden" id="prizeModal">
       <div class="prize-modal">
         <h3>江湖奖赏</h3>
         <div class="prize-list">
-          <div class="prize-item"><span class="prize-level">一统江湖 (80-100分)</span><span class="prize-detail">万能插座 / 风扇 / 显眼包 / 雨伞</span></div>
-          <div class="prize-item"><span class="prize-level">逍遥游侠 (60-80分)</span><span class="prize-detail">钥匙扣</span></div>
-          <div class="prize-item"><span class="prize-level">无名小卒 (0-60分)</span><span class="prize-detail">无</span></div>
+          <div class="prize-item">
+            <span class="prize-level">一统江湖</span>
+            <span class="prize-detail">80-100分 · 以下奖励任选其一：<br>万能插座、风扇、包包、雨伞</span>
+          </div>
+          <div class="prize-item">
+            <span class="prize-level">逍遥游侠</span>
+            <span class="prize-detail">60-80分 · 钥匙扣</span>
+          </div>
+          <div class="prize-item">
+            <span class="prize-level">无名小卒</span>
+            <span class="prize-detail">0-60分 · 无</span>
+          </div>
         </div>
         <button class="btn btn-secondary" onclick="closePrizeModal()">关闭</button>
+      </div>
+    </div>
+
+    <!-- 江湖人物志弹窗 -->
+    <div class="prize-modal-overlay hidden" id="characterModal">
+      <div class="prize-modal character-modal">
+        <h3>⚔️ 江湖人物志</h3>
+        <div id="characterList"></div>
+        <button class="btn btn-secondary" onclick="closeCharacterModal()">关闭</button>
       </div>
     </div>
 
@@ -140,9 +163,10 @@
           抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
           <span style="color:#ffd966;">✨ 80分以上可获 <strong style="color:#fff;">Flag盟主</strong> 荣誉及精美礼品！</span>
         </p>
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px;">
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
           <button class="btn" onclick="startQuiz()">⚔️ 开启试炼</button>
           <button class="btn btn-secondary" onclick="openPrizeModal()">赏格一览</button>
+          <button class="btn btn-secondary" onclick="openCharacterModal()">人物志</button>
         </div>
         <div class="divider">
           <span class="divider-line"></span>
@@ -186,10 +210,9 @@
   <div class="poster-container" id="posterContainer">
     <div class="poster-title">算力江湖</div>
     <div class="divider"><span class="divider-line"></span><span class="divider-icon">⚔️</span><span class="divider-line"></span></div>
-    <div id="posterFigure" class="char-figure"></div>
+    <div id="posterFigure" style="text-align:center;"></div>
     <div class="poster-badge" id="posterBadge">Flag盟主</div>
-    <p style="text-align:center; font-size:1.1rem; margin:10px 0;" id="posterScore">得分：00</p>
-    <p class="poster-desc" id="posterDesc"></p>
+    <p style="text-align:center; font-size:1.1rem;" id="posterScore">得分：00</p>
     <p style="text-align:center; font-size:0.8rem; color:#7f9bb5;" id="posterDate"></p>
     <div style="text-align:center; margin-top:16px;">
       <span style="font-size:0.9rem; color:#b0cce5;">💻 github.com/flagos-ai</span>
@@ -197,7 +220,7 @@
   </div>
 
   <script>
-    // 题库（已去除“哪个工具可以自动生成算子代码？”）
+    // 题库
     const questionBank = [
       { id: 1, type: 'single', question: 'FlagOS 是什么类型的产品？', options: ['大模型训练框架', '统一系统软件平台', 'AI芯片设计工具'], answer: 1 },
       { id: 3, type: 'single', question: 'FlagOS 生态使能工具不包括以下哪个？', options: ['Megatron-FL', 'vLLM-plugin-FL', 'SGLang-plugin-FL'], answer: 2 },
@@ -226,6 +249,40 @@
 
     function openPrizeModal(){ document.getElementById('prizeModal').classList.remove('hidden'); }
     function closePrizeModal(){ document.getElementById('prizeModal').classList.add('hidden'); }
+    function openCharacterModal(){ 
+      document.getElementById('characterModal').classList.remove('hidden');
+      buildCharacterList();
+    }
+    function closeCharacterModal(){ document.getElementById('characterModal').classList.add('hidden'); }
+
+    function getCharacterSVG(role) {
+      if (role === 'master') {
+        return `<svg viewBox="0 0 80 100" width="80" height="100"><circle cx="40" cy="30" r="20" stroke="#5da6ff" stroke-width="2" fill="none" opacity="0.6"/><circle cx="40" cy="28" r="8" fill="#5da6ff" opacity="0.9"/><path d="M28 50 L40 35 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M30 55 Q40 65 50 55" stroke="#8cc6ff" stroke-width="2" fill="none"/><circle cx="40" cy="70" r="10" stroke="#5da6ff" stroke-width="1.5" fill="none"/></svg>`;
+      } else if (role === 'ranger') {
+        return `<svg viewBox="0 0 80 100" width="80" height="100"><path d="M35 85 L25 40 L35 35" stroke="#8cc6ff" stroke-width="2"/><circle cx="35" cy="25" r="8" fill="#5da6ff" opacity="0.9"/><path d="M30 40 L40 30 L50 40" stroke="#8cc6ff" stroke-width="2"/><path d="M45 50 L38 65 L32 50" stroke="#8cc6ff" stroke-width="2"/><line x1="38" y1="25" x2="38" y2="10" stroke="#ffd966" stroke-width="2"/></svg>`;
+      } else {
+        return `<svg viewBox="0 0 80 100" width="80" height="100"><circle cx="40" cy="20" r="7" fill="#5da6ff" opacity="0.8"/><path d="M30 35 L40 45 L50 35" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M28 50 L40 60 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><rect x="33" y="65" width="14" height="20" rx="2" stroke="#8cc6ff" stroke-width="1.5" fill="none"/></svg>`;
+      }
+    }
+
+    function buildCharacterList() {
+      const characters = [
+        { role:'master', title:'一统江湖 · Flag盟主', mbti:'ROOT', desc:'深居FlagOS总舵，通晓编译器、训练框架与使能全链路。扫地僧般深不可测，一指定乾坤。' },
+        { role:'ranger', title:'逍遥游侠 · 跨芯行者', mbti:'FORK', desc:'能在Nvidia、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。' },
+        { role:'apprentice', title:'无名小卒 · 算子学徒', mbti:'BUG', desc:'刚入山门的小弟子，常把Triton和LLVM念反，但勤读残卷，眼中已有光。' }
+      ];
+      const container = document.getElementById('characterList');
+      container.innerHTML = characters.map(c => `
+        <div class="char-card">
+          ${getCharacterSVG(c.role)}
+          <div class="char-info">
+            <h4>${c.title}</h4>
+            <span class="mbti-tag">${c.mbti}</span>
+            <p>${c.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
 
     function startQuiz(){
       const singles = questionBank.filter(q=>q.type==='single');
@@ -292,37 +349,26 @@
         title: '一统江湖 · Flag盟主',
         mbti: 'ROOT',
         desc: '深居FlagOS总舵，通晓编译器、训练框架与使能全链路。模样似扫地僧，不显山露水，一指便能将模型点化到任意芯片。他说“兼容”，江湖便兼容。',
-        comment: '掌门已臻化境，已是 FlagOS 江湖登顶大宗师。万能插座、风扇、显眼包、雨伞请您随意挑一件，执掌 ROOT 权限。',
-        prize: '万能插座 / 风扇 / 显眼包 / 雨伞 (任选)'
+        comment: '掌门已臻化境，已是 FlagOS 江湖登顶大宗师。万能插座、风扇、包包、雨伞，请您任选其一，执掌 ROOT 权限。',
+        prize: '万能插座 / 风扇 / 包包 / 雨伞 (任选)',
+        role: 'master'
       };
       else if (score >= 60) return {
         title: '逍遥游侠 · 跨芯行者',
-        mbti: 'MOVR',
+        mbti: 'FORK',
         desc: '能在Nvidia、NPU、GPGPU间自由迁移模型，左手FlagGems右手vLLM-plugin-FL，遇到警告微微一笑。人送外号“双核书生”。',
         comment: '兄台这把钥匙扣刻着“FlagOS”，往后江湖也算有头有脸。下次武林大会怕要坐上位了。',
-        prize: '钥匙扣'
+        prize: '钥匙扣',
+        role: 'ranger'
       };
       else return {
         title: '无名小卒 · 算子学徒',
         mbti: 'BUG',
         desc: '刚入山门的小弟子，算子代码写一句报三句，常把Triton与LLVM念反。但每日勤读《KernelGen残卷》，眼神已渐有光。',
-        comment: '少侠别急，报错也是修为。下次多看看FlagOS的修炼心法。',
-        prize: '无'
+        comment: '少侠别急，报错也是修为。<br><br>下次多看看FlagOS的修炼心法。',
+        prize: '无',
+        role: 'apprentice'
       };
-    }
-
-    // 生成对应人物SVG
-    function getCharacterSVG(score) {
-      if (score >= 80) {
-        // 扫地僧盟主：盘坐，光环
-        return `<svg viewBox="0 0 80 100" fill="none"><circle cx="40" cy="30" r="20" stroke="#5da6ff" stroke-width="2" fill="none" opacity="0.6"/><circle cx="40" cy="28" r="8" fill="#5da6ff" opacity="0.8"/><path d="M28 50 L40 35 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M30 55 Q40 65 50 55" stroke="#8cc6ff" stroke-width="2" fill="none"/><circle cx="40" cy="70" r="10" stroke="#5da6ff" stroke-width="1.5" fill="none"/></svg>`;
-      } else if (score >= 60) {
-        // 负剑侠客
-        return `<svg viewBox="0 0 80 100" fill="none"><path d="M35 85 L25 40 L35 35" stroke="#8cc6ff" stroke-width="2"/><circle cx="35" cy="25" r="8" fill="#5da6ff" opacity="0.9"/><path d="M30 40 L40 30 L50 40" stroke="#8cc6ff" stroke-width="2"/><path d="M45 50 L38 65 L32 50" stroke="#8cc6ff" stroke-width="2"/><line x1="38" y1="25" x2="38" y2="10" stroke="#ffd966" stroke-width="2"/></svg>`;
-      } else {
-        // 捧卷学徒
-        return `<svg viewBox="0 0 80 100" fill="none"><circle cx="40" cy="20" r="7" fill="#5da6ff" opacity="0.8"/><path d="M30 35 L40 45 L50 35" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M28 50 L40 60 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><rect x="33" y="65" width="14" height="20" rx="2" stroke="#8cc6ff" stroke-width="1.5" fill="none"/></svg>`;
-      }
     }
 
     function finishQuiz(){
@@ -331,8 +377,8 @@
       showScreen('resultScreen');
       const container=document.getElementById('resultContent');
       const data = getTitleAndDesc(score);
-      const figureSvg = getCharacterSVG(score);
-      const saveHint = '<p style="margin-top:16px; color:#ffd966; font-size:0.85rem;">📸 请保存此界面，凭分数至兑奖处领取奖赏</p>';
+      const figureSvg = getCharacterSVG(data.role);
+      const saveHint = '<p style="margin-top:12px; color:#ffd966; font-size:0.85rem;">📸 请保存此界面，凭分数至兑奖处领取奖赏</p>';
 
       if(score>=80){
         container.innerHTML=`
@@ -341,9 +387,8 @@
           <div style="font-size:1.6rem; color:#ffd966; font-weight:bold; letter-spacing:3px;">${data.title}</div>
           <div class="mbti-badge">${data.mbti}</div>
           <div class="title-card">
-            <h4>🏅 江湖称号：${data.title}</h4>
             <p>${data.desc}</p>
-            <p style="margin-top:8px; color:#ffd966;">🎁 奖赏：${data.prize}</p>
+            <p style="margin-top:8px; color:#ffd966; text-align:center;">奖赏：${data.prize}</p>
           </div>
           <p style="color:#b0cce5; font-style:italic;">“${data.comment}”</p>
           <button class="btn" onclick="generatePoster()">📜 生成盟主海报</button>
@@ -359,9 +404,8 @@
           <div style="font-size:1.4rem; color:#5da6ff; font-weight:bold; letter-spacing:3px;">${data.title}</div>
           <div class="mbti-badge">${data.mbti}</div>
           <div class="title-card">
-            <h4>🏅 江湖称号：${data.title}</h4>
             <p>${data.desc}</p>
-            <p style="margin-top:8px; color:#ffd966;">🎁 奖赏：${data.prize}</p>
+            <p style="margin-top:8px; color:#ffd966; text-align:center;">奖赏：${data.prize}</p>
           </div>
           <p style="color:#b0cce5; font-style:italic;">“${data.comment}”</p>
           <p style="font-size:0.85rem; color:#6e99b8; margin:14px 0;">关注以下江湖驿站，即可<strong style="color:#ffd966;">再次挑战</strong>！</p>
@@ -392,11 +436,9 @@
     function generatePoster(){
       const data = getTitleAndDesc(score);
       const poster=document.getElementById('posterContainer');
-      // 置入对应人物形象
-      document.getElementById('posterFigure').innerHTML = getCharacterSVG(score);
+      document.getElementById('posterFigure').innerHTML = getCharacterSVG(data.role);
       document.getElementById('posterBadge').textContent = data.title;
       document.getElementById('posterScore').textContent = `得分：${score} · ${data.mbti}`;
-      document.getElementById('posterDesc').textContent = data.desc.slice(0,60)+'…';
       document.getElementById('posterDate').textContent = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
 
       html2canvas(poster,{scale:2,backgroundColor:'#0a1620'}).then(canvas=>{
