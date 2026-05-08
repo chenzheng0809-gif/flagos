@@ -1,1797 +1,417 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FlagOS 知识闯关挑战赛</title>
-    <style>
-        :root {
-            --bg: #f0f5fc;
-            --card-bg: #ffffff;
-            --primary: #1a56db;
-            --primary-light: #3b82f6;
-            --primary-glow: rgba(26, 86, 219, 0.25);
-            --accent: #2563eb;
-            --gold: #f59e0b;
-            --gold-light: #fbbf24;
-            --success: #10b981;
-            --danger: #ef4444;
-            --text: #1a1a2e;
-            --text-secondary: #4b5563;
-            --text-muted: #9ca3af;
-            --border: #e5e7eb;
-            --border-light: #f3f4f6;
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-xs: 8px;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
-            --shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 40px rgba(26, 86, 219, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
-            --shadow-gold: 0 8px 32px rgba(245, 158, 11, 0.3);
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=yes">
+  <title>FlagOS 算力江湖 · 知识试炼</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'STKaiti','KaiTi','Noto Serif SC','华文楷体','楷体','宋体','SimSun','PingFang SC','Microsoft YaHei',serif;
+      background: #0a1620; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:10px; margin:0; overflow-x:hidden;
+    }
+    body::before {
+      content:""; position:fixed; inset:0;
+      background: radial-gradient(circle at 20% 20%, rgba(50,140,220,0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(0,180,240,0.08) 0%, transparent 50%),
+                  repeating-linear-gradient(45deg, rgba(80,160,240,0.03) 0px, rgba(80,160,240,0.03) 2px, transparent 2px, transparent 8px);
+      pointer-events:none; z-index:0;
+    }
+    .app-container { width:100%; max-width:420px; position:relative; z-index:1; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    .card {
+      background: rgba(6,18,28,0.8); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px);
+      border:2px solid rgba(0,160,255,0.35); box-shadow:0 0 50px rgba(0,30,60,0.8),0 0 30px rgba(0,140,255,0.25), inset 0 0 30px rgba(0,160,255,0.05);
+      border-radius:32px 8px 32px 8px; padding:24px 18px; color:#c0e1ff; position:relative; overflow:hidden;
+    }
+    .card::before {
+      content:""; position:absolute; top:0; left:0; width:100%; height:100%;
+      border:1px solid rgba(0,160,255,0.2); border-radius:inherit; pointer-events:none;
+      background: repeating-linear-gradient(0deg, rgba(0,160,255,0.03) 0px, rgba(0,160,255,0.03) 4px, transparent 4px, transparent 8px);
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0;
-            background-image:
-                radial-gradient(ellipse at 20% 0%, rgba(59, 130, 246, 0.06) 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 50%, rgba(26, 86, 219, 0.03) 0%, transparent 70%);
-            background-attachment: fixed;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-        }
+    .flagos-badge { text-align:center; font-size:0.75rem; letter-spacing:3px; color:#4aa0ff; text-shadow:0 0 10px rgba(42,140,255,0.8); margin-bottom:12px; font-weight:bold; }
+    .title-section { text-align:center; margin-bottom:20px; }
+    .main-title { font-size:2.5rem; font-weight:bold; letter-spacing:6px; background:linear-gradient(180deg, #e0f0ff 0%, #5da6ff 50%, #0e4b8f 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 0 25px rgba(0,160,255,0.6); margin-bottom:8px; }
+    .sub-title { font-size:1rem; color:#8aaacc; letter-spacing:3px; background:rgba(0,0,0,0.3); padding:4px 16px; border-radius:20px; display:inline-block; border:1px solid rgba(0,160,255,0.4); }
 
-        /* 主容器 - 手机端优先 */
-        .main-wrapper {
-            width: 100%;
-            max-width: 440px;
-            padding: 12px 14px 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: relative;
-            z-index: 1;
-        }
+    .divider { display:flex; align-items:center; justify-content:center; gap:12px; margin:20px 0; }
+    .divider-line { flex:1; height:2px; background:linear-gradient(90deg, transparent, rgba(0,160,255,0.7), rgba(160,200,255,0.9), rgba(0,160,255,0.7), transparent); }
+    .divider-icon { font-size:1.4rem; color:#2a8cff; text-shadow:0 0 12px #2a8cff; }
 
-        /* 科技网格背景装饰 */
-        .tech-bg-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.03;
-            background-image:
-                linear-gradient(rgba(26, 86, 219, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(26, 86, 219, 0.5) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
+    .btn {
+      background:linear-gradient(180deg, rgba(12,30,50,0.9) 0%, rgba(4,16,28,0.95) 100%);
+      border:1px solid #2a8cff; color:#cfe4ff; padding:12px 28px; border-radius:8px 24px 8px 24px;
+      font-family:inherit; font-size:1.05rem; letter-spacing:3px; cursor:pointer; transition:all 0.3s;
+      box-shadow:0 0 20px rgba(42,140,255,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:bold;
+    }
+    .btn:active { transform:scale(0.96); box-shadow:0 0 35px rgba(42,140,255,0.8); background:rgba(8,32,52,0.95); color:#fff; }
+    .btn-secondary { background:rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7); box-shadow:0 0 15px rgba(70,130,190,0.35); }
 
-        /* 品牌头部 */
-        .brand-header {
-            text-align: center;
-            padding: 8px 0 2px;
-        }
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            padding: 10px 22px;
-            box-shadow: var(--shadow);
-            letter-spacing: 1px;
-        }
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #fff;
-            font-weight: 900;
-        }
-        .brand-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1a1a2e;
-            letter-spacing: 1.5px;
-        }
-        .brand-name span {
-            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .brand-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            letter-spacing: 1px;
-        }
+    .progress-wrap { margin:15px 0 20px; }
+    .progress-bar { width:100%; height:8px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; border:1px solid rgba(0,160,255,0.3); }
+    .progress-fill { height:100%; background:linear-gradient(90deg, #0a3a6a, #2a8cff, #8cc6ff); border-radius:10px; transition:width 0.4s; box-shadow:0 0 15px #2a8cff; }
+    .progress-text { text-align:right; font-size:0.85rem; color:#6b8aa8; margin-top:6px; }
 
-        /* 卡片 */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 16px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #1a56db 0%, #3b82f6 50%, #60a5fa 100%);
-            border-radius: 3px 3px 0 0;
-        }
+    .question-block { margin-bottom:16px; }
+    .question-text { font-size:1.15rem; line-height:1.6; margin-bottom:12px; color:#e4f0ff; padding:14px; background:rgba(0,100,200,0.08); border-left:4px solid #2a8cff; border-radius:0 12px 12px 0; box-shadow:0 2px 10px rgba(0,0,0,0.3); }
+    .question-hint { font-size:0.75rem; color:#6e99b8; margin:0 0 14px 0; display:flex; align-items:center; gap:6px; font-style:italic; background:rgba(0,0,0,0.2); padding:6px 12px; border-radius:12px; }
+    .question-hint::before { content:"💡"; font-size:1rem; }
 
-        /* 进度条 */
-        .progress-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .progress-bar-outer {
-            flex: 1;
-            height: 6px;
-            background: #e8ecf1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-bar-inner {
-            height: 100%;
-            background: linear-gradient(90deg, #1a56db 0%, #3b82f6 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-        }
-        .progress-text {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            white-space: nowrap;
-            min-width: 40px;
-            text-align: right;
-            font-family: var(--font-mono);
-        }
-        .timer-display {
-            font-size: 11px;
-            color: var(--text-muted);
-            white-space: nowrap;
-            font-family: var(--font-mono);
-            min-width: 44px;
-            text-align: right;
-        }
+    .options-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .option-item {
+      background:rgba(10,22,32,0.75); border:1px solid rgba(70,130,180,0.55); border-radius:12px;
+      padding:14px 16px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:12px;
+      font-size:1rem; color:#b8d4ec;
+    }
+    .option-item:active { background:rgba(42,140,255,0.2); border-color:#2a8cff; }
+    .option-item.selected { background:rgba(42,140,255,0.2); border-color:#2a8cff; box-shadow:0 0 18px rgba(42,140,255,0.5); color:#fff; font-weight:bold; }
+    .option-indicator { width:24px; height:24px; border-radius:50%; border:2px solid rgba(80,160,240,0.8); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.75rem; color:#2a8cff; background:rgba(0,0,0,0.3); }
+    .option-item.selected .option-indicator { background:#2a8cff; color:#081a24; box-shadow:0 0 12px #2a8cff; }
 
-        /* 题目区 */
-        .questions-container {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            max-height: 50vh;
-            overflow-y: auto;
-            padding-right: 4px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-        .questions-container::-webkit-scrollbar {
-            width: 3px;
-        }
-        .questions-container::-webkit-scrollbar-track {
-            background: transparent;
-            border-radius: 4px;
-        }
-        .questions-container::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 4px;
-        }
+    .result-section { text-align:center; }
+    .result-score { font-size:3.8rem; font-weight:bold; background:linear-gradient(180deg, #dcf0ff 0%, #5da6ff 60%, #0a3c6e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:16px 0; text-shadow:0 0 20px #2a8cff; }
 
-        .question-block {
-            background: #fafbfc;
-            border: 1.5px solid #e8ecf1;
-            border-radius: var(--radius-sm);
-            padding: 15px 14px;
-            transition: var(--transition);
-            position: relative;
-        }
-        .question-block.answered {
-            border-color: #93c5fd;
-            background: #f8fafe;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.04);
-        }
-        .question-block.unanswered-warn {
-            border-color: #fca5a5 !important;
-            animation: pulseWarn 1.2s ease-in-out;
-            background: #fff5f5 !important;
-        }
-        @keyframes pulseWarn {
-            0%,
-            100% {
-                box-shadow: 0 0 0px rgba(239, 68, 68, 0);
-            }
-            50% {
-                box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
-            }
-        }
-        .question-tag {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-        }
-        .q-type-single .question-tag {
-            background: #eff6ff;
-            color: #2563eb;
-        }
-        .q-type-multiple .question-tag {
-            background: #fdf2f8;
-            color: #be185d;
-        }
-        .question-title {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.6;
-            color: #1a1a2e;
-            margin-bottom: 10px;
-        }
-        .options-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .option-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: var(--radius-xs);
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1.5px solid transparent;
-            background: #fff;
-            color: #374151;
-            font-size: 13px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            line-height: 1.5;
-        }
-        .option-item:hover {
-            background: #f8fafe;
-            border-color: #bfdbfe;
-        }
-        .option-item:active {
-            transform: scale(0.98);
-        }
-        .option-item.selected {
-            background: #eff6ff !important;
-            border-color: #3b82f6 !important;
-            color: #1a56db !important;
-            font-weight: 600;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.06);
-        }
-        .option-item.correct-reveal {
-            background: #ecfdf5 !important;
-            border-color: #10b981 !important;
-            color: #065f46 !important;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08) !important;
-        }
-        .option-item.wrong-reveal {
-            background: #fef2f2 !important;
-            border-color: #ef4444 !important;
-            color: #991b1b !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06) !important;
-            animation: shake 0.5s ease-out;
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-5px);
-            }
-            40% {
-                transform: translateX(5px);
-            }
-            60% {
-                transform: translateX(-3px);
-            }
-            80% {
-                transform: translateX(3px);
-            }
-        }
-        .option-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #d1d5db;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            background: #fff;
-            margin-top: 1px;
-        }
-        .option-item.selected .option-indicator {
-            border-color: #3b82f6;
-            background: #3b82f6;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
-        }
-        .option-indicator::after {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #fff;
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .option-item.selected .option-indicator::after {
-            opacity: 1;
-        }
-        .option-check-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid #d1d5db;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            background: #fff;
-            margin-top: 1px;
-        }
-        .option-item.selected .option-check-indicator {
-            border-color: #be185d;
-            background: #be185d;
-            box-shadow: 0 0 8px rgba(190, 24, 93, 0.3);
-        }
-        .option-check-indicator::after {
-            content: '✓';
-            font-size: 11px;
-            color: #fff;
-            font-weight: 700;
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .option-item.selected .option-check-indicator::after {
-            opacity: 1;
-        }
-        .multi-hint {
-            font-size: 10px;
-            color: #be185d;
-            margin-top: 4px;
-            font-style: italic;
-            opacity: 0.8;
-        }
+    .social-links { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:18px 0; }
+    .social-link { display:flex; align-items:center; gap:6px; background:rgba(8,24,36,0.7); border:1px solid rgba(70,130,180,0.6); border-radius:20px; padding:8px 16px; color:#b8d4ec; text-decoration:none; font-size:0.9rem; transition:all 0.2s; cursor:pointer; }
+    .social-link:active { border-color:#2a8cff; color:#fff; background:rgba(42,140,255,0.2); }
 
-        /* 按钮 */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 13px 24px;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            -webkit-tap-highlight-color: transparent;
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
-            color: #fff;
-            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.3);
-            width: 100%;
-            font-size: 16px;
-        }
-        .btn-primary:hover {
-            box-shadow: 0 8px 28px rgba(26, 86, 219, 0.4);
-            transform: translateY(-1px);
-        }
-        .btn-primary:active {
-            transform: scale(0.97);
-        }
-        .btn-primary:disabled {
-            background: #c7d2e0;
-            color: #8b9ab0;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-        .btn-outline {
-            background: #fff;
-            border: 2px solid #3b82f6;
-            color: #3b82f6;
-            width: 100%;
-        }
-        .btn-outline:hover {
-            background: #eff6ff;
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-            color: #1a1a0a;
-            font-weight: 700;
-            box-shadow: var(--shadow-gold);
-            width: 100%;
-            animation: goldenGlow 2.5s infinite;
-        }
-        @keyframes goldenGlow {
-            0%,
-            100% {
-                box-shadow: 0 6px 24px rgba(245, 158, 11, 0.35);
-            }
-            50% {
-                box-shadow: 0 12px 36px rgba(245, 158, 11, 0.6);
-            }
-        }
-        .btn-sm {
-            padding: 10px 18px;
-            font-size: 13px;
-            letter-spacing: 0;
-        }
-        .btn-xs {
-            padding: 7px 14px;
-            font-size: 11px;
-            border-radius: 20px;
-        }
+    .hidden { display:none !important; }
 
-        /* 数据分析面板 */
-        .analytics-panel {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-light);
-        }
-        .analytics-item {
-            flex: 1 1 calc(50% - 4px);
-            min-width: 100px;
-            background: #f8fafe;
-            border-radius: var(--radius-xs);
-            padding: 10px 12px;
-            text-align: center;
-            border: 1px solid #e8ecf1;
-        }
-        .analytics-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1a56db;
-            font-family: var(--font-mono);
-        }
-        .analytics-value.gold {
-            color: #f59e0b;
-        }
-        .analytics-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
+    .prize-modal-overlay { position:fixed; inset:0; background:rgba(0,10,20,0.9); backdrop-filter:blur(12px); z-index:99; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .prize-modal { background:rgba(6,18,28,0.95); border:2px solid #2a8cff; border-radius:32px 8px 32px 8px; padding:24px; max-width:320px; width:100%; box-shadow:0 0 40px rgba(0,140,255,0.5); color:#c0e1ff; text-align:center; }
+    .prize-modal h3 { font-size:1.6rem; margin-bottom:16px; background:linear-gradient(180deg, #e0f0ff, #5da6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:4px; }
+    .prize-list { text-align:left; margin:18px 0; }
+    .prize-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed rgba(70,130,190,0.4); font-size:0.95rem; }
+    .prize-item:last-child { border-bottom:none; }
+    .prize-level { color:#5da6ff; font-weight:bold; }
+    .prize-detail { color:#e0f0ff; }
 
-        /* 底部信息区 */
-        .bottom-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .bottom-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-        .bottom-card-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .qr-row {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .qr-item {
-            text-align: center;
-            flex: 1;
-            min-width: 80px;
-            max-width: 110px;
-        }
-        .qr-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            border: 2px solid #e5e7eb;
-            background: #fff;
-            object-fit: contain;
-            padding: 4px;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-        .qr-img:hover {
-            transform: scale(1.08);
-            box-shadow: var(--shadow);
-        }
-        .qr-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-        .link-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .link-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            border: 1.5px solid #e5e7eb;
-            background: #fff;
-            color: #374151;
-        }
-        .link-btn:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: #f8fafe;
-        }
-        .link-btn.github {
-            background: #1a1a2e;
-            color: #fff;
-            border-color: #1a1a2e;
-        }
-        .link-btn.github:hover {
-            background: #2d2d44;
-        }
-        .link-btn.website {
-            background: #1a56db;
-            color: #fff;
-            border-color: #1a56db;
-        }
-        .link-btn.website:hover {
-            background: #1e40af;
-        }
+    .poster-container { position:absolute; left:-9999px; top:0; width:400px; background:#0a1620; padding:28px; border:2px solid #2a8cff; border-radius:32px 8px 32px 8px; color:#c0e1ff; box-shadow:inset 0 0 30px rgba(0,160,255,0.2); }
+    .poster-title { font-size:2rem; text-align:center; letter-spacing:6px; background:linear-gradient(180deg, #dcf0ff, #5da6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:bold; margin-bottom:8px; }
+    .poster-badge { text-align:center; font-size:1.3rem; margin:12px 0; color:#5da6ff; font-weight:bold; letter-spacing:2px; }
+    .poster-desc { font-size:0.8rem; color:#8aaacc; text-align:center; margin:8px 0; }
 
-        /* 弹窗 */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 15, 30, 0.7);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .modal-dialog {
-            background: #fff;
-            border-radius: var(--radius);
-            padding: 24px 18px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
-            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .modal-icon {
-            font-size: 56px;
-            margin-bottom: 6px;
-            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.15);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            color: #1a1a2e;
-        }
-        .modal-score {
-            font-size: 48px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin: 4px 0;
-            font-family: var(--font-mono);
-        }
-        .modal-score.pass {
-            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .modal-score.fail {
-            color: #ef4444;
-        }
-        .modal-desc {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
+    .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(0,10,20,0.9); border:1px solid #2a8cff; color:#e0f0ff; padding:10px 24px; border-radius:30px; z-index:999; font-size:0.95rem; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+    .toast.show { opacity:1; }
 
-        /* 海报图片在弹窗中 */
-        .poster-img {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            margin: 10px 0;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .poster-img:active {
-            transform: scale(0.97);
-        }
-        .save-hint {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
+    .title-card { background:rgba(0,20,40,0.5); border:1px solid rgba(0,160,255,0.4); border-radius:16px; padding:16px; margin:16px 0; text-align:left; }
+    .title-card h4 { color:#ffd966; font-size:1.1rem; margin-bottom:6px; }
+    .title-card p { color:#b0cce5; font-size:0.9rem; line-height:1.5; }
+    .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 12px; border-radius:12px; font-weight:bold; font-size:0.85rem; letter-spacing:2px; margin:8px 0; }
 
-        /* 彩带 */
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 200;
-        }
-        .confetti-piece {
-            position: absolute;
-            border-radius: 3px;
-            animation: confettiFall 3.2s ease-out forwards;
-        }
-        @keyframes confettiFall {
-            0% {
-                transform: translateY(-100px) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(105vh) rotate(720deg) scale(0.2);
-                opacity: 0;
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-12 {
-            margin-top: 12px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-
-        /* 响应式微调 */
-        @media (max-width: 380px) {
-            .main-wrapper {
-                padding: 8px 8px 24px;
-                gap: 10px;
-            }
-            .card {
-                padding: 14px 10px;
-                border-radius: 12px;
-            }
-            .question-block {
-                padding: 12px 10px;
-            }
-            .question-title {
-                font-size: 13px;
-            }
-            .option-item {
-                font-size: 12px;
-                padding: 8px 10px;
-            }
-            .btn {
-                padding: 11px 18px;
-                font-size: 14px;
-            }
-            .qr-img {
-                width: 64px;
-                height: 64px;
-            }
-            .analytics-value {
-                font-size: 18px;
-            }
-        }
-    </style>
+    /* 人物形象 SVG 容器 */
+    .char-figure { display:flex; justify-content:center; margin:10px 0; }
+    .char-figure svg { width:80px; height:100px; filter:drop-shadow(0 0 8px #2a8cff); }
+  </style>
 </head>
 <body>
+  <div class="app-container" id="appContainer">
+    <div class="toast" id="toast"></div>
 
-    <!-- 科技网格背景 -->
-    <div class="tech-bg-grid"></div>
-
-    <!-- 主容器 -->
-    <div class="main-wrapper" id="mainWrapper">
-        <!-- 品牌头部 -->
-        <div class="brand-header">
-            <div class="brand-badge">
-                <div class="brand-icon">🚩</div>
-                <div class="brand-name"><span>FlagOS</span></div>
-            </div>
-            <div class="brand-subtitle">🏆 知识闯关挑战赛 · 赢取精美礼品</div>
+    <div class="prize-modal-overlay hidden" id="prizeModal">
+      <div class="prize-modal">
+        <h3>江湖奖赏</h3>
+        <div class="prize-list">
+          <div class="prize-item"><span class="prize-level">一统江湖 (80-100分)</span><span class="prize-detail">万能插座 / 风扇 / 显眼包 / 雨伞</span></div>
+          <div class="prize-item"><span class="prize-level">逍遥游侠 (60-80分)</span><span class="prize-detail">钥匙扣</span></div>
+          <div class="prize-item"><span class="prize-level">无名小卒 (0-60分)</span><span class="prize-detail">无</span></div>
         </div>
-
-        <!-- 答题卡片 -->
-        <div class="card" id="quizCard">
-            <div class="progress-section">
-                <div class="progress-bar-outer">
-                    <div class="progress-bar-inner" id="progressBar" style="width: 0%;"></div>
-                </div>
-                <span class="progress-text" id="progressText">0/10</span>
-                <span class="timer-display" id="timerDisplay">⏱ 00:00</span>
-            </div>
-            <div class="questions-container" id="questionsContainer"></div>
-            <button class="btn btn-primary mt-12" id="submitBtn" onclick="submitQuiz()">
-                🚀 提交答案，查看成绩
-            </button>
-            <div class="text-center mt-8" id="retryInfo" style="font-size:11px;color:var(--text-muted);">
-                剩余答题机会：<strong id="retryCount">2</strong> 次
-            </div>
-            <!-- 数据分析面板（提交后显示） -->
-            <div class="analytics-panel hidden" id="analyticsPanel"></div>
-        </div>
-
-        <!-- 底部信息区 -->
-        <div class="bottom-section">
-            <!-- 二维码区 -->
-            <div class="bottom-card">
-                <div class="bottom-card-title">📱 关注我们</div>
-                <div class="qr-row">
-                    <div class="qr-item">
-                        <img class="qr-img" id="bottomQrGroup" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdIHg9IjEwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNiIgZmlsbD0iIzNiODJmNiIgb3BhY2l0eT0iMC4xMiIvPjx0ZXh0IHg9IjUwIiB5PSI0NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzNiODJmNiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj7mioDmnK88L3RleHQ+PHRleHQgeD0iNTAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjM2I4MmY2IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPuS6pOa1gee+pDwvdGV4dD48L3N2Zz4=" alt="技术交流群">
-                        <div class="qr-label">💬 技术交流群</div>
-                    </div>
-                    <div class="qr-item">
-                        <img class="qr-img" id="bottomQrWx" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiMxMGI5ODEiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5YWs5LyX5Y+3PC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjMTBiOTgxIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5LqM57u056CBL0FSPC90ZXh0Pjwvc3ZnPg==" alt="公众号">
-                        <div class="qr-label">📱 公众号</div>
-                    </div>
-                    <div class="qr-item">
-                        <img class="qr-img" id="bottomQrXhs" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiNlYzQ4OTkiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNlYzQ4OTkiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5bCP57qi57qiPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjZWM0ODk5IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5rex5YWl5YWz5rOoPC90ZXh0Pjwvc3ZnPg==" alt="小红书">
-                        <div class="qr-label">📕 小红书</div>
-                    </div>
-                </div>
-            </div>
-            <!-- 链接区 -->
-            <div class="bottom-card">
-                <div class="bottom-card-title">🔗 快速链接</div>
-                <div class="link-row">
-                    <a href="https://github.com/flagos" target="_blank" rel="noopener" class="link-btn github">
-                        ⭐ GitHub
-                    </a>
-                    <a href="https://flagos.io/Home" target="_blank" rel="noopener" class="link-btn website">
-                        🌐 了解更多·官网
-                    </a>
-                </div>
-            </div>
-        </div>
+        <button class="btn btn-secondary" onclick="closePrizeModal()">关闭</button>
+      </div>
     </div>
 
-    <!-- 过关弹窗（含海报） -->
-    <div class="modal-overlay hidden" id="modalPass">
-        <div class="modal-dialog">
-            <div class="modal-icon">🎉</div>
-            <div class="modal-title" style="color:#f59e0b;">🏅 恭喜！你是 FlagOS 大师！</div>
-            <div class="modal-score pass" id="passScore">100</div>
-            <div style="font-size:13px;color:#f59e0b;font-weight:600;">分</div>
-            <p class="modal-desc" style="margin-top:6px;">
-                🎁 太棒了！你已获得<strong style="color:#f59e0b;">精美奖品</strong>领取资格！
-            </p>
-            <!-- 海报图片 -->
-            <img class="poster-img" id="posterImage" src="" alt="FlagOS大师海报" crossorigin="anonymous" />
-            <p class="save-hint">📌 长按上方海报即可保存，凭海报至<strong>兑奖处</strong>领取奖品</p>
-            <button class="btn btn-sm mt-8" style="background:#e8ecf1;color:#4b5563;width:100%;" onclick="downloadPoster()">
-                💾 下载海报
-            </button>
-            <button class="btn btn-gold btn-sm mt-8" onclick="closeModal('modalPass')">
-                ✅ 我知道了
-            </button>
+    <div class="card" id="mainCard">
+      <div id="homeScreen">
+        <div class="flagos-badge">⚡ FLAGOS 江湖令 ⚡</div>
+        <div class="title-section">
+          <h1 class="main-title">算力江湖</h1>
+          <p class="sub-title">FlagOS 知识试炼</p>
         </div>
-    </div>
-
-    <!-- 未过关弹窗 -->
-    <div class="modal-overlay hidden" id="modalFail">
-        <div class="modal-dialog">
-            <div class="modal-icon">😢</div>
-            <div class="modal-title" style="color:#ef4444;">差一点点就过关了！</div>
-            <div class="modal-score fail" id="failScore">60</div>
-            <div style="font-size:13px;color:#ef4444;font-weight:600;">分</div>
-            <p class="modal-desc">
-                达到<strong style="color:#f59e0b;">90分以上</strong>才能领取精美礼品哦～<br>
-                🔥 别灰心！<strong>关注小红书/公众号</strong>或<strong>邀请好友关注</strong><br>即可获得<strong>重新答题</strong>的机会！
-            </p>
-            <!-- 学习数据分析 -->
-            <div class="analytics-panel" id="failAnalytics" style="border-top:none;margin-top:4px;"></div>
-            <div class="qr-row mt-8" style="justify-content:center;">
-                <div class="qr-item">
-                    <img class="qr-img" id="failQrXhs" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiNlYzQ4OTkiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNlYzQ4OTkiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5bCP57qi57qiPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjZWM0ODk5IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5rex5YWl5YWz5rOoPC90ZXh0Pjwvc3ZnPg==" alt="小红书">
-                    <div class="qr-label">📕 小红书</div>
-                </div>
-                <div class="qr-item">
-                    <img class="qr-img" id="failQrWx" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiMxMGI5ODEiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5YWs5LyX5Y+3PC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjMTBiOTgxIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5LqM57u056CBL0FSPC90ZXh0Pjwvc3ZnPg==" alt="公众号">
-                    <div class="qr-label">📱 公众号</div>
-                </div>
-            </div>
-            <button class="btn btn-outline btn-sm mt-12" onclick="retryQuiz()" id="retryBtn">
-                🔄 我已关注/已邀请，重新答题
-            </button>
-            <button class="btn btn-sm mt-8" style="background:#e8ecf1;color:#4b5563;width:100%;" onclick="closeModal('modalFail')">
-                关闭
-            </button>
-            <div class="text-center mt-8">
-                <span style="font-size:10px;color:var(--text-muted);">剩余重试机会：<strong id="modalRetryCount">2</strong> 次</span>
-            </div>
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span class="divider-icon">⚔️</span>
+          <span class="divider-line"></span>
         </div>
-    </div>
-
-    <!-- 机会用完弹窗 -->
-    <div class="modal-overlay hidden" id="modalNoRetry">
-        <div class="modal-dialog">
-            <div class="modal-icon">🔒</div>
-            <div class="modal-title" style="color:#f59e0b;">答题机会已用完</div>
-            <p class="modal-desc">
-                你的重新答题机会已经用完了～<br>
-                不过别担心！<strong>邀请好友关注公众号或小红书</strong>，<br>截图发给客服，可获得额外答题机会！
-            </p>
-            <div class="qr-row mt-8" style="justify-content:center;">
-                <div class="qr-item">
-                    <img class="qr-img" id="noRetryQrXhs" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiNlYzQ4OTkiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNlYzQ4OTkiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5bCP57qi57qiPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjZWM0ODk5IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5rex5YWl5YWz5rOoPC90ZXh0Pjwvc3ZnPg==" alt="小红书">
-                    <div class="qr-label">📕 小红书</div>
-                </div>
-                <div class="qr-item">
-                    <img class="qr-img" id="noRetryQrWx" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgcng9IjgiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjYiIGZpbGw9IiMxMGI5ODEiIG9wYWNpdHk9IjAuMTIiLz48dGV4dCB4PSI1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+5YWs5LyX5Y+3PC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5IiBmaWxsPSIjMTBiOTgxIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5LqM57u056CBL0FSPC90ZXh0Pjwvc3ZnPg==" alt="公众号">
-                    <div class="qr-label">📱 公众号</div>
-                </div>
-            </div>
-            <button class="btn btn-sm mt-12" style="background:#e8ecf1;color:#4b5563;width:100%;" onclick="closeModal('modalNoRetry')">
-                关闭
-            </button>
+        <p style="text-align:center; margin-bottom:10px; color:#8aaacc; font-size:0.95rem;">
+          抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
+          <span style="color:#ffd966;">✨ 80分以上可获 <strong style="color:#fff;">Flag盟主</strong> 荣誉及精美礼品！</span>
+        </p>
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px;">
+          <button class="btn" onclick="startQuiz()">⚔️ 开启试炼</button>
+          <button class="btn btn-secondary" onclick="openPrizeModal()">赏格一览</button>
         </div>
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span class="divider-icon">🔗</span>
+          <span class="divider-line"></span>
+        </div>
+        <div style="text-align:center; font-size:0.85rem; color:#6e99b8;">江湖驿站</div>
+        <div class="social-links">
+          <a href="https://www.flagos.ai" target="_blank" class="social-link">🌐 官网</a>
+          <a href="https://github.com/flagos-ai" target="_blank" class="social-link">💻 GitHub</a>
+          <a href="https://xhslink.com/m/3ICKAAaP2Lm" target="_blank" class="social-link">📕 小红书</a>
+          <a href="https://space.bilibili.com/3546791834290849" target="_blank" class="social-link">📺 B站</a>
+          <a href="https://www.zhihu.com/people/95-22-20-18/posts" target="_blank" class="social-link">🤔 知乎</a>
+          <a href="https://discord.gg/BwavgwVEkk" target="_blank" class="social-link">💬 Discord</a>
+        </div>
+      </div>
+
+      <div id="quizScreen" class="hidden">
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+          <div class="progress-text" id="progressText">第 1/10 题</div>
+        </div>
+        <div class="question-block">
+          <div class="question-text" id="questionText"></div>
+          <div class="question-hint">💡 不确定答案？可查看现场展区介绍、技术手册或官网了解哦</div>
+          <div class="options-list" id="optionsContainer"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+          <span style="font-size:0.85rem; color:#6b8aa8;" id="typeHint"></span>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一招 ➤</button>
+        </div>
+      </div>
+
+      <div id="resultScreen" class="hidden">
+        <div class="result-section" id="resultContent"></div>
+      </div>
     </div>
-
-    <!-- 隐藏的Canvas用于生成海报 -->
-    <canvas id="posterCanvas" style="display:none;" width="750" height="1200"></canvas>
-
-    <!-- 隐藏的图片用于加载二维码到Canvas -->
-    <img id="hiddenQrForPoster" src="" style="display:none;" crossorigin="anonymous" />
-
-    <script>
-        // ============================================
-        //  📋 题库配置（用户提供的22道题）
-        // ============================================
-        const QUESTION_BANK = [
-            // 单选题 1-17
-            { id: 1, type: 'single', question: 'FlagOS 是什么类型的产品？', options: ['A.大模型训练框架',
-                    'B.统一系统软件平台', 'C.AI芯片设计工具'
-                ], answer: 'B' },
-            { id: 2, type: 'single', question: '哪个工具可以自动生成算子代码？', options: ['A.FlagPerf', 'B.KernelGen',
-                    'C.Megatron-FL'
-                ], answer: 'B' },
-            { id: 3, type: 'single', question: '以下哪个是 FlagsOS 支持的应用场景？', options: ['A.仅数据中心', 'B.机器人云边协同',
-                    'C.仅边缘推理'
-                ], answer: 'B' },
-            { id: 4, type: 'single', question: 'FlagOS 生态使能工具不包括以下哪个？', options: ['A.Megatron-FL',
-                    'B.vLLM-plugin-FL', 'C.SGLang-plugin-FL'
-                ], answer: 'C' },
-            { id: 5, type: 'single', question: 'FlagScale 的主要功能是什么？', options: ['A.并行训练推理', 'B.算子自动生成',
-                    'C.多芯片评测'
-                ], answer: 'A' },
-            { id: 6, type: 'single', question: '以下哪个属于具身智能模型？', options: ['A.GLM', 'B.Qwen-VL', 'C.QwenGROOT'],
-                answer: 'C' },
-            { id: 7, type: 'single', question: 'FlagsOS 支持哪种硬件形态？', options: ['A.仅AI服务器', 'B.AI PC', 'C.端侧模组'],
-                answer: 'C' },
-            { id: 8, type: 'single', question: '哪个工具用于多芯片性能评测？', options: ['A.KernelGen', 'B.FlagPerf',
-                    'C.FlagRelease'
-                ], answer: 'B' },
-            { id: 9, type: 'single', question: 'FlagOS 的核心设计目标是？', options: ['A. 设计专用 AI 芯片',
-                    'B. 实现模型一次开发、跨芯无缝迁移', 'C. 训练通用大语言模型'
-                ], answer: 'B' },
-            { id: 10, type: 'single', question: 'FlagGems主要用于什么？', options: ['A. 芯片性能测试', 'B. 大模型推理加速',
-                    'C. 多芯并行训练'
-                ], answer: 'B' },
-            { id: 11, type: 'single', question: 'KernelGen的核心能力是什么？', options: ['A. 硬件驱动开发', 'B. 算子代码自动生成',
-                    'C. 模型压缩量化'
-                ], answer: 'B' },
-            { id: 12, type: 'single', question: 'FlagPerf的工具定位是什么？', options: ['A. 模型训练框架', 'B. 多芯片性能评测',
-                    'C. 推理服务部署'
-                ], answer: 'B' },
-            { id: 13, type: 'single', question: 'FlagOS的生态建设核心理念是什么？', options: ['A. 烟囱式垂直整合', 'B. 统一互联互通',
-                    'C. 封闭商业授权'
-                ], answer: 'B' },
-            { id: 14, type: 'single', question: '以下哪个工具可实现算子开发从 "年" 级周期缩短至 "小时" 级？',
-                options: ['A.KernelGen', 'B.FlagPerf', 'C.FlagScale'], answer: 'A' },
-            { id: 15, type: 'single', question: 'FlagOS 2.0 首发的面向 Agent 领域的专业技能库是？', options: [
-                    'A.FlagOS-Skills', 'B.FlagOS-Robo', 'C.FlagRelease'
-                ], answer: 'A' },
-            { id: 16, type: 'single', question: 'FlagOS 统一编译器 FlagTree 基于以下哪个项目深度定制？', options: ['A.Triton',
-                    'B.LLVM', 'C.PyTorch'
-                ], answer: 'A' },
-            { id: 17, type: 'single', question: 'FlagOS-Robo 核心解决的具身智能行业痛点是？', options: ['A. 机器人本体设计',
-                    'B. 跨平台跨硬件的算法快速迁移', 'C. 具身模型预训练'
-                ], answer: 'B' },
-            // 多选题 18-22
-            { id: 18, type: 'multiple', question: 'FlagOS的核心组件包括以下哪些？', options: ['A. FlagGems（推理加速库）',
-                    'B. FlagTree（统一AI编译器）', 'C. Flag CX（统一通信库）', 'D. FlagScale（并行训练框架）'
-                ], answer: ['A', 'B', 'C', 'D'] },
-            { id: 19, type: 'multiple', question: 'FlagOS的应用场景覆盖哪些领域？', options: ['A. 数据中心', 'B. 机器人云边协同',
-                    'C. 端侧推理', 'D. 自动驾驶'
-                ], answer: ['A', 'B', 'C'] },
-            { id: 20, type: 'multiple', question: 'FlagOS支持哪些系统硬件形态？', options: ['A.端侧计算模组', 'B.AI PC',
-                    'C.AI服务器', 'D.超节点系统'
-                ], answer: ['A', 'B', 'C', 'D'] },
-            { id: 21, type: 'multiple', question: 'FlagOS支持哪些芯片架构？', options: ['A.Nvidia', 'B.NPU', 'C.GPGPU',
-                    'D.RISC-V AI', 'E.DSA', 'F.ARM等'
-                ], answer: ['A', 'B', 'C', 'D', 'E', 'F'] },
-            { id: 22, type: 'multiple', question: '以下哪些是FlagOS生态的合作伙伴类型？', options: ['A. 芯片厂商', 'B. 模型厂商',
-                    'C. 云服务商', 'D. 学术机构'
-                ], answer: ['A', 'B', 'C', 'D'] },
-        ];
-
-        // ============================================
-        //  全局状态
-        // ============================================
-        let currentQuestions = [];
-        let maxRetries = 2;
-        let remainingRetries = maxRetries;
-        let quizSubmitted = false;
-        let timerInterval = null;
-        let elapsedSeconds = 0;
-        let lastResultData = null; // 存储最后的结果用于海报
-
-        // ============================================
-        //  初始化
-        // ============================================
-        function initQuiz() {
-            quizSubmitted = false;
-            elapsedSeconds = 0;
-            lastResultData = null;
-            currentQuestions = generateQuiz();
-            renderQuestions();
-            updateProgress();
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').textContent = '🚀 提交答案，查看成绩';
-            document.getElementById('analyticsPanel').classList.add('hidden');
-            document.getElementById('analyticsPanel').innerHTML = '';
-            updateRetryDisplay();
-            document.getElementById('questionsContainer').scrollTop = 0;
-            startTimer();
-        }
-
-        function generateQuiz() {
-            const singlePool = QUESTION_BANK.filter(q => q.type === 'single');
-            const multiplePool = QUESTION_BANK.filter(q => q.type === 'multiple');
-            const shuffledSingle = [...singlePool].sort(() => Math.random() - 0.5);
-            const shuffledMultiple = [...multiplePool].sort(() => Math.random() - 0.5);
-            const selectedSingles = shuffledSingle.slice(0, 7);
-            const selectedMultiples = shuffledMultiple.slice(0, 3);
-            return [...selectedSingles, ...selectedMultiples].sort(() => Math.random() - 0.5);
-        }
-
-        function startTimer() {
-            stopTimer();
-            elapsedSeconds = 0;
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                elapsedSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-        }
-
-        function updateTimerDisplay() {
-            const mins = Math.floor(elapsedSeconds / 60);
-            const secs = elapsedSeconds % 60;
-            document.getElementById('timerDisplay').textContent =
-                `⏱ ${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        }
-
-        function getElapsedString() {
-            const mins = Math.floor(elapsedSeconds / 60);
-            const secs = elapsedSeconds % 60;
-            return `${String(mins).padStart(2, '0')}分${String(secs).padStart(2, '0')}秒`;
-        }
-
-        // ============================================
-        //  渲染题目
-        // ============================================
-        function renderQuestions() {
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
-            currentQuestions.forEach((q, index) => {
-                const block = document.createElement('div');
-                block.className = `question-block q-type-${q.type}`;
-                block.id = `questionBlock${index}`;
-                const tagText = q.type === 'single' ? '📋 单选题' : '📋 多选题';
-                block.innerHTML = `
-                    <span class="question-tag">${tagText} · 第${index + 1}题</span>
-                    <div class="question-title">${q.question}</div>
-                    <ul class="options-list">
-                        ${q.options.map((opt, optIdx) => {
-                            const optLetter = String.fromCharCode(65 + optIdx);
-                            const indicatorClass = q.type === 'single' ? 'option-indicator' : 'option-check-indicator';
-                            return `
-                                <li class="option-item"
-                                    data-question-index="${index}"
-                                    data-option-letter="${optLetter}"
-                                    onclick="selectOption(this, ${index}, '${optLetter}', '${q.type}')">
-                                    <span class="${indicatorClass}"></span>
-                                    <span>${opt}</span>
-                                </li>
-                            `;
-                        }).join('')}
-                    </ul>
-                    ${q.type === 'multiple' ? '<div class="multi-hint">💡 多选题，请选择所有正确答案</div>' : ''}
-                `;
-                container.appendChild(block);
-            });
-        }
-
-        // ============================================
-        //  选择选项
-        // ============================================
-        function selectOption(element, questionIndex, optionLetter, questionType) {
-            if (quizSubmitted) return;
-            const questionBlock = document.getElementById(`questionBlock${questionIndex}`);
-            const allOptions = questionBlock.querySelectorAll('.option-item');
-
-            if (questionType === 'single') {
-                allOptions.forEach(opt => opt.classList.remove('selected'));
-                element.classList.add('selected');
-                questionBlock.classList.add('answered');
-                questionBlock.classList.remove('unanswered-warn');
-            } else {
-                element.classList.toggle('selected');
-                const anySelected = questionBlock.querySelectorAll('.option-item.selected').length > 0;
-                if (anySelected) {
-                    questionBlock.classList.add('answered');
-                    questionBlock.classList.remove('unanswered-warn');
-                } else {
-                    questionBlock.classList.remove('answered');
-                }
-            }
-            updateProgress();
-        }
-
-        function updateProgress() {
-            let answeredCount = 0;
-            currentQuestions.forEach((q, index) => {
-                const block = document.getElementById(`questionBlock${index}`);
-                if (!block) return;
-                if (q.type === 'single') {
-                    if (block.querySelector('.option-item.selected')) answeredCount++;
-                } else {
-                    if (block.querySelectorAll('.option-item.selected').length > 0) answeredCount++;
-                }
-            });
-            const total = currentQuestions.length;
-            const percentage = Math.round((answeredCount / total) * 100);
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = `${answeredCount}/${total}`;
-        }
-
-        // ============================================
-        //  获取答案 & 评分
-        // ============================================
-        function getUserAnswers() {
-            const answers = {};
-            currentQuestions.forEach((q, index) => {
-                const block = document.getElementById(`questionBlock${index}`);
-                if (!block) { answers[index] = q.type === 'single' ? null : []; return; }
-                if (q.type === 'single') {
-                    const sel = block.querySelector('.option-item.selected');
-                    answers[index] = sel ? sel.dataset.optionLetter : null;
-                } else {
-                    const selAll = block.querySelectorAll('.option-item.selected');
-                    answers[index] = Array.from(selAll).map(el => el.dataset.optionLetter);
-                }
-            });
-            return answers;
-        }
-
-        function calculateScore(userAnswers) {
-            let correctCount = 0;
-            let singleTotal = 0,
-                singleCorrect = 0;
-            let multiTotal = 0,
-                multiCorrect = 0;
-            const details = [];
-
-            currentQuestions.forEach((q, index) => {
-                const userAns = userAnswers[index];
-                const correctAns = q.answer;
-                let isCorrect = false;
-
-                if (q.type === 'single') {
-                    singleTotal++;
-                    isCorrect = (userAns === correctAns);
-                    if (isCorrect) singleCorrect++;
-                } else {
-                    multiTotal++;
-                    if (Array.isArray(userAns) && Array.isArray(correctAns)) {
-                        const sortedUser = [...userAns].sort();
-                        const sortedCorrect = [...correctAns].sort();
-                        isCorrect = JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect);
-                    }
-                    if (isCorrect) multiCorrect++;
-                }
-
-                if (isCorrect) correctCount++;
-                details.push({ index, question: q, userAnswer: userAns, isCorrect });
-            });
-
-            const score = correctCount * 10;
-            return {
-                score,
-                correctCount,
-                total: currentQuestions.length,
-                details,
-                singleTotal,
-                singleCorrect,
-                multiTotal,
-                multiCorrect,
-                elapsedSeconds,
-                elapsedString: getElapsedString(),
-            };
-        }
-
-        // ============================================
-        //  提交
-        // ============================================
-        function submitQuiz() {
-            if (quizSubmitted) return;
-            const userAnswers = getUserAnswers();
-            let allAnswered = true;
-            const unansweredIndices = [];
-
-            currentQuestions.forEach((q, index) => {
-                const ans = userAnswers[index];
-                if (q.type === 'single') { if (!ans) { allAnswered = false;
-                        unansweredIndices.push(index); } } else { if (!ans || ans.length === 0) { allAnswered =
-                            false;
-                        unansweredIndices.push(index); } }
-            });
-
-            if (!allAnswered) {
-                unansweredIndices.forEach(idx => {
-                    const block = document.getElementById(`questionBlock${idx}`);
-                    if (block) { block.classList.add('unanswered-warn');
-                        block.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-                });
-                shakeElement(document.getElementById('submitBtn'));
-                setTimeout(() => alert('⚠️ 还有题目未作答，请完成所有题目后再提交哦～'), 200);
-                return;
-            }
-
-            stopTimer();
-            const result = calculateScore(userAnswers);
-            lastResultData = result;
-            quizSubmitted = true;
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('submitBtn').textContent = '✅ 已提交';
-
-            revealAnswers(result.details);
-            showAnalyticsPanel(result);
-
-            setTimeout(() => {
-                if (result.score >= 90) {
-                    showPassModal(result);
-                } else {
-                    showFailModal(result);
-                }
-            }, 700);
-        }
-
-        function revealAnswers(details) {
-            details.forEach(detail => {
-                const block = document.getElementById(`questionBlock${detail.index}`);
-                if (!block) return;
-                const allOptions = block.querySelectorAll('.option-item');
-                if (detail.question.type === 'single') {
-                    allOptions.forEach(opt => {
-                        const letter = opt.dataset.optionLetter;
-                        if (letter === detail.question.answer) opt.classList.add('correct-reveal');
-                        if (letter === detail.userAnswer && !detail.isCorrect) opt.classList.add(
-                            'wrong-reveal');
-                    });
-                } else {
-                    const correctSet = new Set(detail.question.answer);
-                    const userSet = new Set(detail.userAnswer || []);
-                    allOptions.forEach(opt => {
-                        const letter = opt.dataset.optionLetter;
-                        if (correctSet.has(letter)) opt.classList.add('correct-reveal');
-                        if (userSet.has(letter) && !correctSet.has(letter)) opt.classList.add(
-                            'wrong-reveal');
-                    });
-                }
-            });
-            const firstWrong = details.find(d => !d.isCorrect);
-            if (firstWrong) {
-                const block = document.getElementById(`questionBlock${firstWrong.index}`);
-                if (block) setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
-            }
-        }
-
-        // ============================================
-        //  学习行为数据分析面板
-        // ============================================
-        function showAnalyticsPanel(result) {
-            const panel = document.getElementById('analyticsPanel');
-            panel.classList.remove('hidden');
-            const singleRate = result.singleTotal > 0 ? Math.round((result.singleCorrect / result.singleTotal) * 100) :
-                0;
-            const multiRate = result.multiTotal > 0 ? Math.round((result.multiCorrect / result.multiTotal) * 100) : 0;
-            const grade = result.score >= 90 ? '🏅 FlagOS大师' : result.score >= 70 ? '📘 进阶学者' : result.score >= 50 ?
-                '📗 初级探索者' : '📓 新手入门';
-            panel.innerHTML = `
-                <div class="analytics-item">
-                    <div class="analytics-value ${result.score >= 90 ? 'gold' : ''}">${result.score}</div>
-                    <div class="analytics-label">总得分</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${result.correctCount}/${result.total}</div>
-                    <div class="analytics-label">正确题数</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${singleRate}%</div>
-                    <div class="analytics-label">单选正确率</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${multiRate}%</div>
-                    <div class="analytics-label">多选正确率</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value" style="font-size:16px;">${result.elapsedString}</div>
-                    <div class="analytics-label">答题用时</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value" style="font-size:16px;">${grade}</div>
-                    <div class="analytics-label">等级评定</div>
-                </div>
-            `;
-        }
-
-        function showFailAnalyticsInModal(result) {
-            const panel = document.getElementById('failAnalytics');
-            const singleRate = result.singleTotal > 0 ? Math.round((result.singleCorrect / result.singleTotal) * 100) :
-                0;
-            const multiRate = result.multiTotal > 0 ? Math.round((result.multiCorrect / result.multiTotal) * 100) : 0;
-            panel.innerHTML = `
-                <div class="analytics-item">
-                    <div class="analytics-value" style="color:#ef4444;">${result.score}</div>
-                    <div class="analytics-label">总得分</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${result.correctCount}/${result.total}</div>
-                    <div class="analytics-label">正确题数</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${singleRate}%</div>
-                    <div class="analytics-label">单选正确率</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value">${multiRate}%</div>
-                    <div class="analytics-label">多选正确率</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value" style="font-size:14px;">${result.elapsedString}</div>
-                    <div class="analytics-label">答题用时</div>
-                </div>
-                <div class="analytics-item">
-                    <div class="analytics-value" style="font-size:13px;">📓 继续加油</div>
-                    <div class="analytics-label">等级评定</div>
-                </div>
-            `;
-        }
-
-        // ============================================
-        //  海报生成（Canvas）
-        // ============================================
-        function generatePoster(result) {
-            const canvas = document.getElementById('posterCanvas');
-            const ctx = canvas.getContext('2d');
-            const W = canvas.width; // 750
-            const H = canvas.height; // 1200
-
-            // 清空
-            ctx.clearRect(0, 0, W, H);
-
-            // 背景渐变 - 蓝白科技风
-            const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-            bgGrad.addColorStop(0, '#f8fafe');
-            bgGrad.addColorStop(0.3, '#ffffff');
-            bgGrad.addColorStop(0.7, '#f0f5fc');
-            bgGrad.addColorStop(1, '#dbeafe');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, W, H);
-
-            // 科技网格线
-            ctx.strokeStyle = 'rgba(59,130,246,0.06)';
-            ctx.lineWidth = 1;
-            for (let x = 0; x < W; x += 30) { ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, H);
-                ctx.stroke(); }
-            for (let y = 0; y < H; y += 30) { ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(W, y);
-                ctx.stroke(); }
-
-            // 顶部光晕
-            const glowGrad = ctx.createRadialGradient(W / 2, 180, 60, W / 2, 180, 350);
-            glowGrad.addColorStop(0, 'rgba(59,130,246,0.15)');
-            glowGrad.addColorStop(1, 'rgba(59,130,246,0)');
-            ctx.fillStyle = glowGrad;
-            ctx.fillRect(0, 0, W, 500);
-
-            // FlagOS 标志
-            ctx.fillStyle = '#1a56db';
-            ctx.font = 'bold 48px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('🚩 FlagOS', W / 2, 130);
-
-            // 英文副标题
-            ctx.fillStyle = '#3b82f6';
-            ctx.font = '600 16px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText('KNOWLEDGE CHALLENGE · MASTER', W / 2, 165);
-
-            // 分隔线
-            ctx.strokeStyle = 'rgba(59,130,246,0.25)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(W / 4, 190);
-            ctx.lineTo(W * 3 / 4, 190);
-            ctx.stroke();
-
-            // 大师徽章圆形
-            const badgeCX = W / 2;
-            const badgeCY = 310;
-            const badgeR = 80;
-
-            // 光晕
-            const badgeGlow = ctx.createRadialGradient(badgeCX, badgeCY, badgeR - 15, badgeCX, badgeCY, badgeR + 30);
-            badgeGlow.addColorStop(0, 'rgba(245,158,11,0.5)');
-            badgeGlow.addColorStop(0.6, 'rgba(245,158,11,0.15)');
-            badgeGlow.addColorStop(1, 'rgba(245,158,11,0)');
-            ctx.fillStyle = badgeGlow;
-            ctx.beginPath();
-            ctx.arc(badgeCX, badgeCY, badgeR + 30, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 徽章主体
-            const badgeGrad = ctx.createLinearGradient(badgeCX - badgeR, badgeCY - badgeR, badgeCX + badgeR, badgeCY +
-                badgeR);
-            badgeGrad.addColorStop(0, '#fbbf24');
-            badgeGrad.addColorStop(0.5, '#f59e0b');
-            badgeGrad.addColorStop(1, '#d97706');
-            ctx.fillStyle = badgeGrad;
-            ctx.beginPath();
-            ctx.arc(badgeCX, badgeCY, badgeR, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 4;
-            ctx.stroke();
-
-            // 徽章内文字
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 26px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText('MASTER', badgeCX, badgeCY - 6);
-            ctx.font = 'bold 14px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText('大师', badgeCX, badgeCY + 22);
-
-            // 分数展示
-            ctx.fillStyle = '#1a1a2e';
-            ctx.font = 'bold 72px -apple-system, "SF Mono", "Consolas", monospace';
-            ctx.fillText(result.score, W / 2, 460);
-            ctx.fillStyle = '#f59e0b';
-            ctx.font = 'bold 22px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText('分', W / 2 + 52, 460);
-
-            // 评级
-            const gradeText = result.score >= 90 ? '🏅 FlagOS 大师认证' : '📘 FlagOS 学者';
-            ctx.fillStyle = '#1a56db';
-            ctx.font = 'bold 20px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText(gradeText, W / 2, 500);
-
-            // 数据卡片背景
-            const dataCardY = 540;
-            const dataCardH = 200;
-            ctx.fillStyle = '#ffffff';
-            ctx.strokeStyle = 'rgba(59,130,246,0.2)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.roundRect(40, dataCardY, W - 80, dataCardH, 16);
-            ctx.fill();
-            ctx.stroke();
-
-            // 卡片顶部色条
-            ctx.fillStyle = '#3b82f6';
-            ctx.beginPath();
-            ctx.roundRect(40, dataCardY, W - 80, 5, [16, 16, 0, 0]);
-            ctx.fill();
-
-            // 数据标题
-            ctx.fillStyle = '#1a56db';
-            ctx.font = 'bold 16px -apple-system, "PingFang SC", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('📊 学习行为数据', W / 2, dataCardY + 38);
-
-            // 数据行
-            const singleRate = result.singleTotal > 0 ? Math.round((result.singleCorrect / result.singleTotal) * 100) :
-                0;
-            const multiRate = result.multiTotal > 0 ? Math.round((result.multiCorrect / result.multiTotal) * 100) : 0;
-
-            const dataItems = [
-                { label: '正确题数', value: `${result.correctCount} / ${result.total}` },
-                { label: '单选正确率', value: `${singleRate}%` },
-                { label: '多选正确率', value: `${multiRate}%` },
-                { label: '答题用时', value: result.elapsedString },
-            ];
-
-            ctx.fillStyle = '#1a1a2e';
-            ctx.font = '14px -apple-system, "PingFang SC", sans-serif';
-            dataItems.forEach((item, i) => {
-                const col = i % 2;
-                const row = Math.floor(i / 2);
-                const x = col === 0 ? W / 2 - 150 : W / 2 + 30;
-                const y = dataCardY + 68 + row * 45;
-                ctx.textAlign = 'left';
-                ctx.fillStyle = '#6b7280';
-                ctx.font = '12px -apple-system, "PingFang SC", sans-serif';
-                ctx.fillText(item.label, x, y);
-                ctx.fillStyle = '#1a56db';
-                ctx.font = 'bold 17px -apple-system, "SF Mono", "Consolas", monospace';
-                ctx.fillText(item.value, x, y + 22);
-            });
-
-            // 二维码区域
-            const qrY = dataCardY + dataCardH + 40;
-            const qrSize = 130;
-            const qrX = W / 2 - qrSize / 2;
-
-            // 二维码白色背景
-            ctx.fillStyle = '#fff';
-            ctx.strokeStyle = 'rgba(59,130,246,0.3)';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.roundRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16, 12);
-            ctx.fill();
-            ctx.stroke();
-
-            // 尝试绘制二维码图片
-            const qrImgEl = document.getElementById('bottomQrWx');
-            if (qrImgEl && qrImgEl.complete && qrImgEl.naturalWidth > 0) {
-                try {
-                    ctx.drawImage(qrImgEl, qrX, qrY, qrSize, qrSize);
-                } catch (e) {
-                    drawFallbackQR(ctx, qrX, qrY, qrSize);
-                }
-            } else {
-                drawFallbackQR(ctx, qrX, qrY, qrSize);
-            }
-
-            // 二维码下方文字
-            ctx.fillStyle = '#4b5563';
-            ctx.font = '13px -apple-system, "PingFang SC", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('📱 扫码关注公众号', W / 2, qrY + qrSize + 28);
-            ctx.fillText('凭此海报至兑奖处领取精美礼品', W / 2, qrY + qrSize + 52);
-
-            // 底部
-            ctx.fillStyle = '#9ca3af';
-            ctx.font = '11px -apple-system, "PingFang SC", sans-serif';
-            ctx.fillText('FlagOS · 统一系统软件平台', W / 2, H - 40);
-            ctx.fillText('https://flagos.io', W / 2, H - 20);
-
-            // 返回图片URL
-            return canvas.toDataURL('image/png', 0.92);
-        }
-
-        function drawFallbackQR(ctx, x, y, size) {
-            ctx.fillStyle = '#f0f5fc';
-            ctx.fillRect(x, y, size, size);
-            ctx.fillStyle = '#3b82f6';
-            ctx.font = 'bold 14px -apple-system, "PingFang SC", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('公众号', x + size / 2, y + size / 2 - 4);
-            ctx.fillText('二维码', x + size / 2, y + size / 2 + 16);
-            // 绘制模拟方块
-            const blockSize = 8;
-            const gap = 4;
-            const startX = x + 20;
-            const startY = y + 20;
-            ctx.fillStyle = '#1a56db';
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    if (Math.random() > 0.45) {
-                        ctx.fillRect(startX + col * (blockSize + gap), startY + row * (blockSize + gap), blockSize,
-                            blockSize);
-                    }
-                }
-            }
-        }
-
-        function downloadPoster() {
-            if (!lastResultData || lastResultData.score < 90) return;
-            const dataURL = generatePoster(lastResultData);
-            const link = document.createElement('a');
-            link.download = 'FlagOS大师海报.png';
-            link.href = dataURL;
-            link.click();
-        }
-
-        // ============================================
-        //  弹窗
-        // ============================================
-        function showPassModal(result) {
-            const dataURL = generatePoster(result);
-            document.getElementById('posterImage').src = dataURL;
-            document.getElementById('passScore').textContent = result.score;
-            document.getElementById('modalPass').classList.remove('hidden');
-            spawnConfetti();
-        }
-
-        function showFailModal(result) {
-            document.getElementById('failScore').textContent = result.score;
-            document.getElementById('modalRetryCount').textContent = remainingRetries;
-            showFailAnalyticsInModal(result);
-            const retryBtn = document.getElementById('retryBtn');
-            if (remainingRetries <= 0) {
-                retryBtn.textContent = '🔒 答题机会已用完';
-                retryBtn.style.opacity = '0.5';
-                retryBtn.style.pointerEvents = 'none';
-            } else {
-                retryBtn.textContent = '🔄 我已关注/已邀请，重新答题';
-                retryBtn.style.opacity = '1';
-                retryBtn.style.pointerEvents = 'auto';
-            }
-            document.getElementById('modalFail').classList.remove('hidden');
-        }
-
-        function retryQuiz() {
-            if (remainingRetries <= 0) {
-                closeModal('modalFail');
-                setTimeout(() => document.getElementById('modalNoRetry').classList.remove('hidden'), 300);
-                return;
-            }
-            remainingRetries--;
-            closeModal('modalFail');
-            resetQuiz();
-            initQuiz();
-            updateRetryDisplay();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function resetQuiz() {
-            quizSubmitted = false;
-            currentQuestions = [];
-            lastResultData = null;
-            stopTimer();
-            elapsedSeconds = 0;
-            document.getElementById('questionsContainer').innerHTML = '';
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('progressText').textContent = '0/10';
-            document.getElementById('timerDisplay').textContent = '⏱ 00:00';
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').textContent = '🚀 提交答案，查看成绩';
-            document.getElementById('analyticsPanel').classList.add('hidden');
-            document.getElementById('analyticsPanel').innerHTML = '';
-            document.getElementById('failAnalytics').innerHTML = '';
-            updateTimerDisplay();
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function updateRetryDisplay() {
-            document.getElementById('retryCount').textContent = remainingRetries;
-            document.getElementById('modalRetryCount').textContent = remainingRetries;
-            if (remainingRetries <= 0) {
-                document.getElementById('retryInfo').innerHTML =
-                    '剩余答题机会：<strong style="color:#ef4444;">0</strong> 次（邀请好友可获取额外机会）';
-            } else {
-                document.getElementById('retryInfo').innerHTML =
-                `剩余答题机会：<strong>${remainingRetries}</strong> 次`;
-            }
-        }
-
-        // ============================================
-        //  辅助
-        // ============================================
-        function shakeElement(el) {
-            el.style.animation = 'none';
-            el.offsetHeight;
-            el.style.animation = 'shake 0.5s ease-out';
-            setTimeout(() => { el.style.animation = ''; }, 500);
-        }
-
-        function spawnConfetti() {
-            const container = document.createElement('div');
-            container.className = 'confetti-container';
-            container.id = 'confettiContainer';
-            document.body.appendChild(container);
-            const colors = ['#f59e0b', '#fbbf24', '#3b82f6', '#10b981', '#ec4899', '#ffd700', '#60a5fa', '#ff9f43',
-                '#a78bfa'
-            ];
-            for (let i = 0; i < 100; i++) {
-                const piece = document.createElement('div');
-                piece.className = 'confetti-piece';
-                piece.style.left = Math.random() * 100 + '%';
-                piece.style.top = -(Math.random() * 60 + 10) + 'px';
-                piece.style.width = (Math.random() * 9 + 5) + 'px';
-                piece.style.height = (Math.random() * 9 + 5) + 'px';
-                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                piece.style.animationDuration = (Math.random() * 2.5 + 2.5) + 's';
-                piece.style.animationDelay = Math.random() * 1.2 + 's';
-                container.appendChild(piece);
-            }
-            setTimeout(() => {
-                const el = document.getElementById('confettiContainer');
-                if (el) el.remove();
-            }, 4500);
-        }
-
-        // 点击弹窗遮罩关闭
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal-overlay')) {
-                e.target.classList.add('hidden');
-            }
+  </div>
+
+  <!-- 离屏海报 -->
+  <div class="poster-container" id="posterContainer">
+    <div class="poster-title">算力江湖</div>
+    <div class="divider"><span class="divider-line"></span><span class="divider-icon">⚔️</span><span class="divider-line"></span></div>
+    <div id="posterFigure" class="char-figure"></div>
+    <div class="poster-badge" id="posterBadge">Flag盟主</div>
+    <p style="text-align:center; font-size:1.1rem; margin:10px 0;" id="posterScore">得分：00</p>
+    <p class="poster-desc" id="posterDesc"></p>
+    <p style="text-align:center; font-size:0.8rem; color:#7f9bb5;" id="posterDate"></p>
+    <div style="text-align:center; margin-top:16px;">
+      <span style="font-size:0.9rem; color:#b0cce5;">💻 github.com/flagos-ai</span>
+    </div>
+  </div>
+
+  <script>
+    // 题库（已去除“哪个工具可以自动生成算子代码？”）
+    const questionBank = [
+      { id: 1, type: 'single', question: 'FlagOS 是什么类型的产品？', options: ['大模型训练框架', '统一系统软件平台', 'AI芯片设计工具'], answer: 1 },
+      { id: 3, type: 'single', question: 'FlagOS 生态使能工具不包括以下哪个？', options: ['Megatron-FL', 'vLLM-plugin-FL', 'SGLang-plugin-FL'], answer: 2 },
+      { id: 4, type: 'single', question: 'FlagScale 的主要功能是什么？', options: ['并行训练推理', '算子自动生成', '多芯片评测'], answer: 0 },
+      { id: 5, type: 'single', question: 'FlagOS 的核心设计目标是？', options: ['设计专用 AI 芯片', '实现模型一次开发、跨芯无缝迁移', '训练通用大语言模型'], answer: 1 },
+      { id: 8, type: 'single', question: 'FlagOS的生态建设核心理念是什么？', options: ['烟囱式垂直整合', '统一互联互通', '封闭商业授权'], answer: 1 },
+      { id: 9, type: 'single', question: '以下哪个工具可实现算子开发从“年”级周期缩短至“小时”级？', options: ['KernelGen', 'FlagPerf', 'FlagScale'], answer: 0 },
+      { id: 11, type: 'single', question: 'FlagOS 统一编译器 FlagTree 基于以下哪个项目深度定制？', options: ['Triton', 'LLVM', 'PyTorch'], answer: 0 },
+      { id: 12, type: 'single', question: 'FlagOS-Robo 核心解决的具身智能行业痛点是？', options: ['机器人本体设计', '跨平台跨硬件的算法快速迁移', '具身模型预训练'], answer: 1 },
+      { id: 6, type: 'multiple', question: '以下关于FlagGems说法正确的是？', options: ['是基于 Triton 的高性能算子库', '已加入 PyTorch Ecosystem', '支持 AI 计算相关的算子优化与加速', '属于开源 AI 计算软件栈生态的一部分'], answer: [0,1,2,3] },
+      { id: 7, type: 'multiple', question: '以下关于FlagRelease说法正确的是？', options: ['是开源大模型的跨芯迁移与统一发布平台', '致力于提升大模型应用的发布与交付效率', '支持 AI 应用的工程化部署与版本管理', '面向10家厂商的12款硬件发布了70+个开源模型实例'], answer: [0,1,2,3] },
+      { id: 10, type: 'multiple', question: 'FlagOS 发布的 12+ Skills 主要能解决以下哪些方面的问题？', options: ['模型适配与迁移', '算子生成与优化', '性能测试与调优', '容器配置与发布流程'], answer: [0,1,2,3] },
+      { id: 13, type: 'multiple', question: 'FlagOS的核心组件包括以下哪些？', options: ['FlagGems（推理加速库）', 'FlagTree（统一AI编译器）', 'Flag CX（统一通信库）', 'FlagScale（并行训练框架）'], answer: [0,1,2,3] },
+      { id: 14, type: 'multiple', question: 'FlagOS的应用场景覆盖哪些领域？', options: ['数据中心', '机器人云边协同', '端侧推理', '自动驾驶'], answer: [0,1,2] },
+      { id: 15, type: 'multiple', question: 'FlagOS支持哪些硬件？', options: ['端侧计算模组', 'AI PC', 'AI服务器', '超节点系统'], answer: [0,1,2,3] },
+      { id: 16, type: 'multiple', question: 'FlagOS支持哪些芯片架构？', options: ['Nvidia', 'NPU', 'GPGPU', 'RISC-V AI', 'DSA', 'ARM等'], answer: [0,1,2,3,4,5] },
+      { id: 17, type: 'multiple', question: '以下哪些是FlagOS生态的合作伙伴类型？', options: ['芯片机构', '大模型机构', '云服务商', '操作系统机构'], answer: [0,1,2,3] }
+    ];
+
+    let quizQuestions = [], currentIndex = 0, score = 0, selectedOptions = null;
+
+    function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+    function showScreen(id){ ['homeScreen','quizScreen','resultScreen'].forEach(s=>document.getElementById(s).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+    function trackEvent(e,d={}){ console.log('[Track]',e,d); }
+
+    function openPrizeModal(){ document.getElementById('prizeModal').classList.remove('hidden'); }
+    function closePrizeModal(){ document.getElementById('prizeModal').classList.add('hidden'); }
+
+    function startQuiz(){
+      const singles = questionBank.filter(q=>q.type==='single');
+      const multiples = questionBank.filter(q=>q.type==='multiple');
+      quizQuestions = [...shuffle(singles).slice(0,6), ...shuffle(multiples).slice(0,4)];
+      currentIndex=0; score=0; selectedOptions=null;
+      trackEvent('quiz_start');
+      showScreen('quizScreen');
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      if(currentIndex>=quizQuestions.length){ finishQuiz(); return; }
+      const q=quizQuestions[currentIndex];
+      document.getElementById('questionText').textContent=q.question;
+      document.getElementById('progressText').textContent=`第 ${currentIndex+1}/${quizQuestions.length} 题`;
+      document.getElementById('progressFill').style.width=`${(currentIndex/quizQuestions.length)*100}%`;
+      document.getElementById('typeHint').textContent = q.type==='single' ? '【单枪匹马·单选】' : '【群英荟萃·多选】';
+      const container=document.getElementById('optionsContainer');
+      container.innerHTML='';
+      selectedOptions = q.type==='single' ? null : [];
+      q.options.forEach((opt,idx)=>{
+        const item=document.createElement('div');
+        item.className='option-item';
+        item.innerHTML=`<span class="option-indicator">${String.fromCharCode(65+idx)}</span>${opt}`;
+        item.addEventListener('click',()=>selectOption(idx,q.type));
+        container.appendChild(item);
+      });
+      document.getElementById('nextBtn').disabled=true;
+      document.getElementById('nextBtn').textContent= currentIndex===quizQuestions.length-1 ? '提交答卷 · 论剑' : '下一招 ➤';
+    }
+
+    function selectOption(idx,type){
+      const items=document.querySelectorAll('.option-item');
+      if(type==='single'){
+        selectedOptions=idx;
+        items.forEach((el,i)=>el.classList.toggle('selected',i===idx));
+        document.getElementById('nextBtn').disabled=false;
+      }else{
+        if(selectedOptions.includes(idx)) selectedOptions=selectedOptions.filter(i=>i!==idx);
+        else selectedOptions.push(idx);
+        items.forEach((el,i)=>el.classList.toggle('selected',selectedOptions.includes(i)));
+        document.getElementById('nextBtn').disabled=selectedOptions.length===0;
+      }
+    }
+
+    function nextQuestion(){
+      const q=quizQuestions[currentIndex];
+      let correct=false;
+      if(q.type==='single') correct=selectedOptions===q.answer;
+      else {
+        const sortedUser=[...selectedOptions].sort((a,b)=>a-b);
+        const sortedAns=[...q.answer].sort((a,b)=>a-b);
+        correct=JSON.stringify(sortedUser)===JSON.stringify(sortedAns);
+      }
+      if(correct) score+=10;
+      currentIndex++;
+      if(currentIndex>=quizQuestions.length) finishQuiz();
+      else renderQuestion();
+    }
+
+    function getTitleAndDesc(score) {
+      if (score >= 80) return {
+        title: '一统江湖 · Flag盟主',
+        mbti: 'ROOT',
+        desc: '深居FlagOS总舵，通晓编译器、训练框架与使能全链路。模样似扫地僧，不显山露水，一指便能将模型点化到任意芯片。他说“兼容”，江湖便兼容。',
+        comment: '掌门已臻化境，已是 FlagOS 江湖登顶大宗师。万能插座、风扇、显眼包、雨伞请您随意挑一件，执掌 ROOT 权限。',
+        prize: '万能插座 / 风扇 / 显眼包 / 雨伞 (任选)'
+      };
+      else if (score >= 60) return {
+        title: '逍遥游侠 · 跨芯行者',
+        mbti: 'MOVR',
+        desc: '能在Nvidia、NPU、GPGPU间自由迁移模型，左手FlagGems右手vLLM-plugin-FL，遇到警告微微一笑。人送外号“双核书生”。',
+        comment: '兄台这把钥匙扣刻着“FlagOS”，往后江湖也算有头有脸。下次武林大会怕要坐上位了。',
+        prize: '钥匙扣'
+      };
+      else return {
+        title: '无名小卒 · 算子学徒',
+        mbti: 'BUG',
+        desc: '刚入山门的小弟子，算子代码写一句报三句，常把Triton与LLVM念反。但每日勤读《KernelGen残卷》，眼神已渐有光。',
+        comment: '少侠别急，报错也是修为。下次多看看FlagOS的修炼心法。',
+        prize: '无'
+      };
+    }
+
+    // 生成对应人物SVG
+    function getCharacterSVG(score) {
+      if (score >= 80) {
+        // 扫地僧盟主：盘坐，光环
+        return `<svg viewBox="0 0 80 100" fill="none"><circle cx="40" cy="30" r="20" stroke="#5da6ff" stroke-width="2" fill="none" opacity="0.6"/><circle cx="40" cy="28" r="8" fill="#5da6ff" opacity="0.8"/><path d="M28 50 L40 35 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M30 55 Q40 65 50 55" stroke="#8cc6ff" stroke-width="2" fill="none"/><circle cx="40" cy="70" r="10" stroke="#5da6ff" stroke-width="1.5" fill="none"/></svg>`;
+      } else if (score >= 60) {
+        // 负剑侠客
+        return `<svg viewBox="0 0 80 100" fill="none"><path d="M35 85 L25 40 L35 35" stroke="#8cc6ff" stroke-width="2"/><circle cx="35" cy="25" r="8" fill="#5da6ff" opacity="0.9"/><path d="M30 40 L40 30 L50 40" stroke="#8cc6ff" stroke-width="2"/><path d="M45 50 L38 65 L32 50" stroke="#8cc6ff" stroke-width="2"/><line x1="38" y1="25" x2="38" y2="10" stroke="#ffd966" stroke-width="2"/></svg>`;
+      } else {
+        // 捧卷学徒
+        return `<svg viewBox="0 0 80 100" fill="none"><circle cx="40" cy="20" r="7" fill="#5da6ff" opacity="0.8"/><path d="M30 35 L40 45 L50 35" stroke="#8cc6ff" stroke-width="2" fill="none"/><path d="M28 50 L40 60 L52 50" stroke="#8cc6ff" stroke-width="2" fill="none"/><rect x="33" y="65" width="14" height="20" rx="2" stroke="#8cc6ff" stroke-width="1.5" fill="none"/></svg>`;
+      }
+    }
+
+    function finishQuiz(){
+      document.getElementById('progressFill').style.width='100%';
+      trackEvent('quiz_finish',{score});
+      showScreen('resultScreen');
+      const container=document.getElementById('resultContent');
+      const data = getTitleAndDesc(score);
+      const figureSvg = getCharacterSVG(score);
+      const saveHint = '<p style="margin-top:16px; color:#ffd966; font-size:0.85rem;">📸 请保存此界面，凭分数至兑奖处领取奖赏</p>';
+
+      if(score>=80){
+        container.innerHTML=`
+          <div class="char-figure">${figureSvg}</div>
+          <div class="result-score">${score} 分</div>
+          <div style="font-size:1.6rem; color:#ffd966; font-weight:bold; letter-spacing:3px;">${data.title}</div>
+          <div class="mbti-badge">${data.mbti}</div>
+          <div class="title-card">
+            <h4>🏅 江湖称号：${data.title}</h4>
+            <p>${data.desc}</p>
+            <p style="margin-top:8px; color:#ffd966;">🎁 奖赏：${data.prize}</p>
+          </div>
+          <p style="color:#b0cce5; font-style:italic;">“${data.comment}”</p>
+          <button class="btn" onclick="generatePoster()">📜 生成盟主海报</button>
+          <div id="posterPreview" style="margin-top:16px;"></div>
+          ${saveHint}
+        `;
+      }else{
+        const btnText = '🔄 再战江湖';
+        const btnId = 'retryBtn';
+        container.innerHTML=`
+          <div class="char-figure">${figureSvg}</div>
+          <div class="result-score">${score} 分</div>
+          <div style="font-size:1.4rem; color:#5da6ff; font-weight:bold; letter-spacing:3px;">${data.title}</div>
+          <div class="mbti-badge">${data.mbti}</div>
+          <div class="title-card">
+            <h4>🏅 江湖称号：${data.title}</h4>
+            <p>${data.desc}</p>
+            <p style="margin-top:8px; color:#ffd966;">🎁 奖赏：${data.prize}</p>
+          </div>
+          <p style="color:#b0cce5; font-style:italic;">“${data.comment}”</p>
+          <p style="font-size:0.85rem; color:#6e99b8; margin:14px 0;">关注以下江湖驿站，即可<strong style="color:#ffd966;">再次挑战</strong>！</p>
+          <div class="social-links" id="socialGroup">
+            <a href="https://www.flagos.ai" target="_blank" class="social-link clickable-social">🌐 官网</a>
+            <a href="https://github.com/flagos-ai" target="_blank" class="social-link clickable-social">💻 GitHub</a>
+            <a href="https://xhslink.com/m/3ICKAAaP2Lm" target="_blank" class="social-link clickable-social">📕 小红书</a>
+            <a href="https://space.bilibili.com/3546791834290849" target="_blank" class="social-link clickable-social">📺 B站</a>
+            <a href="https://www.zhihu.com/people/95-22-20-18/posts" target="_blank" class="social-link clickable-social">🤔 知乎</a>
+            <a href="https://discord.gg/BwavgwVEkk" target="_blank" class="social-link clickable-social">💬 Discord</a>
+          </div>
+          <button class="btn btn-secondary hidden" id="${btnId}" onclick="retryQuiz()">${btnText}</button>
+          ${saveHint}
+        `;
+        const retryBtn = document.getElementById(btnId);
+        document.querySelectorAll('.clickable-social').forEach(link=>{
+          link.addEventListener('click', function(e){
+            if(retryBtn) retryBtn.classList.remove('hidden');
+            trackEvent('social_click');
+          });
         });
+      }
+      trackEvent('result_shown');
+    }
 
-        // ============================================
-        //  🚀 启动
-        // ============================================
-        function boot() {
-            // 预加载二维码图片用于海报
-            const qrImg = document.getElementById('bottomQrWx');
-            if (qrImg && !qrImg.complete) {
-                qrImg.addEventListener('load', () => {});
-            }
-            initQuiz();
-            updateRetryDisplay();
-        }
+    function retryQuiz(){ trackEvent('retry_click'); showScreen('homeScreen'); }
 
-        document.addEventListener('DOMContentLoaded', boot);
+    function generatePoster(){
+      const data = getTitleAndDesc(score);
+      const poster=document.getElementById('posterContainer');
+      // 置入对应人物形象
+      document.getElementById('posterFigure').innerHTML = getCharacterSVG(score);
+      document.getElementById('posterBadge').textContent = data.title;
+      document.getElementById('posterScore').textContent = `得分：${score} · ${data.mbti}`;
+      document.getElementById('posterDesc').textContent = data.desc.slice(0,60)+'…';
+      document.getElementById('posterDate').textContent = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
 
-        // ============================================
-        //  📌 二维码替换说明
-        // ============================================
-        // 请将以下SVG占位符替换为实际二维码图片URL：
-        // - #bottomQrGroup → 技术交流群二维码
-        // - #bottomQrWx → 公众号二维码
-        // - #bottomQrXhs → 小红书二维码
-        // 弹窗中的二维码同理：
-        // - #failQrXhs, #failQrWx
-        // - #noRetryQrXhs, #noRetryQrWx
-        //
-        // GitHub链接请替换为实际地址（当前为占位 https://github.com/flagos）
-        // 官网链接：https://flagos.io/Home
-        // ============================================
-        console.log('🚩 FlagOS 知识闯关挑战赛已就绪');
-        console.log('📋 题库：' + QUESTION_BANK.length + ' 道（17单选 + 5多选）');
-        console.log('📝 每轮：7道单选 + 3道多选 = 10道');
-        console.log('🏆 过关线：90分');
-        console.log('🎨 海报：750×1200 蓝白科技风');
-        console.log('🔄 重试机会：' + maxRetries + ' 次');
-        console.log('💡 请替换所有SVG占位二维码为真实图片');
-    </script>
+      html2canvas(poster,{scale:2,backgroundColor:'#0a1620'}).then(canvas=>{
+        const preview=document.getElementById('posterPreview');
+        preview.innerHTML='';
+        const img=document.createElement('img'); img.src=canvas.toDataURL('image/png'); img.style.width='100%'; img.style.borderRadius='12px'; img.style.marginTop='12px';
+        preview.appendChild(img);
+        const download=document.createElement('a'); download.href=canvas.toDataURL('image/png'); download.download='FlagOS江湖称号.png'; download.textContent='💾 保存海报'; download.style.cssText='display:block; margin-top:10px; color:#5da6ff; text-decoration:underline; cursor:pointer;';
+        preview.appendChild(download);
+        trackEvent('poster_generated');
+        showToast('江湖称号已生成！可保存分享');
+      }).catch(err=>{ console.error(err); showToast('海报生成失败'); });
+    }
+
+    trackEvent('page_view');
+  </script>
 </body>
 </html>
