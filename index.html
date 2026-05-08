@@ -51,6 +51,9 @@
     .btn:active { transform:scale(0.96); box-shadow:0 0 35px rgba(42,140,255,0.8); background:rgba(8,32,52,0.95); color:#fff; }
     .btn-secondary { background:rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7); box-shadow:0 0 15px rgba(70,130,190,0.35); }
 
+    /* 小按钮 */
+    .btn-sm { font-size:0.85rem; padding:8px 18px; letter-spacing:2px; }
+
     .progress-wrap { margin:15px 0 20px; }
     .progress-bar { width:100%; height:8px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; border:1px solid rgba(0,160,255,0.3); }
     .progress-fill { height:100%; background:linear-gradient(90deg, #0a3a6a, #2a8cff, #8cc6ff); border-radius:10px; transition:width 0.4s; box-shadow:0 0 15px #2a8cff; }
@@ -163,10 +166,15 @@
           抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
           <span style="color:#ffd966;">✨ 80分以上可获 <strong style="color:#fff;">Flag盟主</strong> 荣誉及精美礼品！</span>
         </p>
-        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
-          <button class="btn" onclick="startQuiz()">⚔️ 开启试炼</button>
-          <button class="btn btn-secondary" onclick="openPrizeModal()">赏格一览</button>
-          <button class="btn btn-secondary" onclick="openCharacterModal()">人物志</button>
+        <!-- 按钮布局：首行开启试炼，次行两个小按钮 -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex; justify-content:center; margin-bottom:10px;">
+            <button class="btn" onclick="startQuiz()">⚔️ 开启试炼</button>
+          </div>
+          <div style="display:flex; gap:12px; justify-content:center;">
+            <button class="btn btn-secondary btn-sm" onclick="openPrizeModal()">赏格一览</button>
+            <button class="btn btn-secondary btn-sm" onclick="openCharacterModal()">人物志</button>
+          </div>
         </div>
         <div class="divider">
           <span class="divider-line"></span>
@@ -396,7 +404,7 @@
           ${saveHint}
         `;
       }else{
-        const btnText = '🔄 再战江湖';
+        const btnText = '再战江湖';
         const btnId = 'retryBtn';
         container.innerHTML=`
           <div class="char-figure">${figureSvg}</div>
@@ -408,7 +416,7 @@
             <p style="margin-top:8px; color:#ffd966; text-align:center;">奖赏：${data.prize}</p>
           </div>
           <p style="color:#b0cce5; font-style:italic;">“${data.comment}”</p>
-          <p style="font-size:0.85rem; color:#6e99b8; margin:14px 0;">关注以下江湖驿站，即可<strong style="color:#ffd966;">再次挑战</strong>！</p>
+          <p style="font-size:0.85rem; color:#6e99b8; margin:14px 0;">点击按钮，关注以下江湖驿站，返回本页面即可<strong style="color:#ffd966;">再次挑战</strong>！</p>
           <div class="social-links" id="socialGroup">
             <a href="https://www.flagos.ai" target="_blank" class="social-link clickable-social">🌐 官网</a>
             <a href="https://github.com/flagos-ai" target="_blank" class="social-link clickable-social">💻 GitHub</a>
