@@ -103,7 +103,6 @@
     .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 10px; border-radius:12px; font-size:0.75rem; letter-spacing:2px; margin:4px 0; font-weight:bold; }
     .guide-text { font-size:0.85rem; color:#6e99b8; margin:10px 0; line-height:1.6; word-break:keep-all; }
 
-    /* 音乐控制按钮 */
     .music-toggle {
       position: fixed; bottom: 20px; right: 20px; z-index: 99;
       width: 44px; height: 44px; background: rgba(6,18,28,0.8);
@@ -129,12 +128,10 @@
   <div class="tech-bg"></div>
   <div class="light-sweep"></div>
 
-  <!-- 音乐控制按钮 -->
   <div id="musicToggle" class="music-toggle paused" onclick="toggleMusic()" title="音乐开关">♪</div>
 
-  <!-- 背景音乐 -->
   <audio id="bgm" loop preload="auto" style="display:none;">
-    <source src="https://music.163.com/song/media/outer/url?id=1843719177.mp3" type="audio/mpeg">
+    <source src="https://music.163.com/song/media/outer/url?id=1411949011.mp3" type="audio/mpeg">
   </audio>
 
   <div class="app-container" id="appContainer">
@@ -166,7 +163,7 @@
         <div class="divider"><span class="divider-line"></span><span class="divider-icon">&#9876;</span><span class="divider-line"></span></div>
         <p style="text-align:center; margin-bottom:10px; color:#8aaacc; font-size:0.95rem;">
           抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
-          <strong style="color:#ffd966;">80分以上</strong><span style="color:#8aaacc;">可解锁</span><strong style="color:#ffd966;">FlagOS独特身份</strong><span style="color:#8aaacc;">和</span><strong style="color:#ffd966;">精美周边</strong>
+          <span style="color:#8aaacc;">一起解锁</span><strong style="color:#ffd966;">FlagOS独特身份</strong><span style="color:#8aaacc;">和</span><strong style="color:#ffd966;">精美周边</strong>
         </p>
         <div style="margin-bottom:20px;">
           <div style="display:flex; justify-content:center; margin-bottom:10px;">
@@ -214,11 +211,9 @@
   </div>
 
   <script>
-    // ==================== BGM 配置：关山（国风纯音乐）- 森林乐团 ====================
-    const bgmUrl = 'https://music.163.com/song/media/outer/url?id=1843719177.mp3';
-    // ============================================================================
+    // BGM：忆 - SCHAT10（影）
+    const bgmUrl = 'https://music.163.com/song/media/outer/url?id=1411949011.mp3';
 
-    // 音乐控制
     const bgm = document.getElementById('bgm');
     const musicToggle = document.getElementById('musicToggle');
     let musicStarted = false;
@@ -257,7 +252,7 @@
       }
     }, { once: true });
 
-    // 使用 jsDelivr CDN 加速图片加载
+    // 图片CDN
     const characterImages = {
       master: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-master.png',
       ranger: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-ranger.png',
@@ -467,7 +462,6 @@
       startQuiz();
     }
 
-    // 初始化背景音乐
     initBgm();
     trackEvent('page_view');
   </script>
