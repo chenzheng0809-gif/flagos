@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=yes">
-  <title>FlagOS 算力江湖 · 知识闯关</title>
+  <title>FlagOS · Knowledge Challenge</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -51,6 +51,7 @@
     .btn:active { transform:scale(0.96); box-shadow:0 0 35px rgba(42,140,255,0.9), 0 0 10px #2a8cff; background:rgba(8,32,52,0.95); color:#fff; }
     .btn-secondary { background:rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7); box-shadow:0 0 15px rgba(70,130,190,0.35); }
     .btn-sm { font-size:0.85rem; padding:8px 18px; letter-spacing:2px; }
+    .btn-xs { padding:8px 12px; font-size:0.8rem; letter-spacing:1px; }
     .progress-wrap { margin:15px 0 20px; }
     .progress-bar { width:100%; height:12px; background:rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; border:1px solid rgba(0,160,255,0.3); box-shadow:0 0 10px rgba(0,160,255,0.2) inset; }
     .progress-fill { height:100%; background:linear-gradient(90deg, #0a3a6a, #2a8cff, #8cc6ff); border-radius:10px; transition:width 0.4s ease; box-shadow:0 0 20px #2a8cff; }
@@ -114,14 +115,30 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-    .music-toggle:hover {
-      background: rgba(42,140,255,0.3);
-      box-shadow: 0 0 25px rgba(42,140,255,0.9);
+    .music-toggle:hover { background: rgba(42,140,255,0.3); box-shadow: 0 0 25px rgba(42,140,255,0.9); }
+    .music-toggle.paused { opacity: 0.6; color: #6b8aa8; }
+
+    .lang-toggle {
+      position: fixed; bottom: 20px; right: 70px; z-index: 99;
+      width: 44px; height: 44px; background: rgba(6,18,28,0.8);
+      border: 2px solid #2a8cff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #c0e1ff; font-size: 0.9rem;
+      box-shadow: 0 0 15px rgba(42,140,255,0.5);
+      transition: all 0.3s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      font-weight: bold;
     }
-    .music-toggle.paused {
-      opacity: 0.6;
-      color: #6b8aa8;
+    .lang-toggle:hover { background: rgba(42,140,255,0.3); box-shadow: 0 0 25px rgba(42,140,255,0.9); }
+
+    /* 返回上一题按钮 */
+    .back-btn {
+      background: rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7);
+      box-shadow:0 0 15px rgba(70,130,190,0.35); color:#cfe4ff;
+      padding:10px 16px; border-radius:20px; font-size:1rem; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:4px; font-weight:bold;
     }
+    .back-btn:active { background: rgba(42,140,255,0.3); box-shadow: 0 0 20px #2a8cff; }
   </style>
 </head>
 <body>
@@ -129,6 +146,7 @@
   <div class="light-sweep"></div>
 
   <div id="musicToggle" class="music-toggle paused" onclick="toggleMusic()" title="音乐开关">♪</div>
+  <div id="langToggle" class="lang-toggle" onclick="toggleLang()" title="Switch Language">EN</div>
 
   <audio id="bgm" loop preload="auto" style="display:none;">
     <source src="https://music.163.com/song/media/outer/url?id=1411949011.mp3" type="audio/mpeg">
@@ -138,51 +156,51 @@
     <div class="toast" id="toast"></div>
     <div class="prize-modal-overlay hidden" id="prizeModal">
       <div class="prize-modal">
-        <h3>江湖奖赏</h3>
+        <h3 id="prizeTitle">江湖奖赏</h3>
         <div class="prize-list">
-          <div class="prize-item"><span class="prize-level">一统江湖</span><span class="prize-detail">80-100分 · 万能插座等精美周边</span></div>
-          <div class="prize-item"><span class="prize-level">逍遥游侠</span><span class="prize-detail">60-80分 · 钥匙扣</span></div>
-          <div class="prize-item"><span class="prize-level">无名小卒</span><span class="prize-detail">0-60分 · 无</span></div>
+          <div class="prize-item"><span class="prize-level" id="prizeLevel1">一统江湖</span><span class="prize-detail" id="prizeDetail1">80-100分 · 万能插座等精美周边</span></div>
+          <div class="prize-item"><span class="prize-level" id="prizeLevel2">逍遥游侠</span><span class="prize-detail" id="prizeDetail2">60-80分 · 钥匙扣</span></div>
+          <div class="prize-item"><span class="prize-level" id="prizeLevel3">无名小卒</span><span class="prize-detail" id="prizeDetail3">0-60分 · 无</span></div>
         </div>
-        <button class="btn btn-secondary" onclick="closePrizeModal()">关闭</button>
+        <button class="btn btn-secondary" onclick="closePrizeModal()" id="prizeCloseBtn">关闭</button>
       </div>
     </div>
     <div class="prize-modal-overlay hidden" id="characterModal">
       <div class="prize-modal character-modal">
-        <h3>江湖人物志</h3>
+        <h3 id="characterTitle">江湖人物志</h3>
         <div id="characterList"></div>
-        <button class="btn btn-secondary" onclick="closeCharacterModal()">关闭</button>
+        <button class="btn btn-secondary" onclick="closeCharacterModal()" id="characterCloseBtn">关闭</button>
       </div>
     </div>
     <div class="card" id="mainCard">
       <div id="homeScreen">
         <div class="title-section">
-          <h1 class="main-title">FlagOS<br>知识闯关</h1>
-          <p class="sub-title">江湖令：FlagOS盟主争夺</p>
+          <h1 class="main-title" id="mainTitle">FlagOS<br>知识闯关</h1>
+          <p class="sub-title" id="subTitle">江湖令：FlagOS盟主争夺</p>
         </div>
         <div class="divider"><span class="divider-line"></span><span class="divider-icon">&#9876;</span><span class="divider-line"></span></div>
-        <p style="text-align:center; margin-bottom:10px; color:#8aaacc; font-size:0.95rem;">
+        <p style="text-align:center; margin-bottom:10px; color:#8aaacc; font-size:0.95rem;" id="homeDesc">
           抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
           <span style="color:#8aaacc;">一起解锁</span><strong style="color:#ffd966;">FlagOS独特身份</strong><span style="color:#8aaacc;">和</span><strong style="color:#ffd966;">精美周边</strong>
         </p>
         <div style="margin-bottom:20px;">
           <div style="display:flex; justify-content:center; margin-bottom:10px;">
-            <button class="btn" onclick="startQuiz()">开启试炼</button>
+            <button class="btn" onclick="startQuiz()" id="startBtn">开启试炼</button>
           </div>
           <div style="display:flex; gap:12px; justify-content:center;">
-            <button class="btn btn-secondary btn-sm" onclick="openPrizeModal()">赏格一览</button>
-            <button class="btn btn-secondary btn-sm" onclick="openCharacterModal()">人物志</button>
+            <button class="btn btn-secondary btn-sm" onclick="openPrizeModal()" id="prizeBtn">赏格一览</button>
+            <button class="btn btn-secondary btn-sm" onclick="openCharacterModal()" id="characterBtn">人物志</button>
           </div>
         </div>
         <div class="divider"><span class="divider-line"></span><span class="divider-icon">&#128279;</span><span class="divider-line"></span></div>
-        <div style="text-align:center; font-size:0.85rem; color:#6e99b8;">江湖驿站</div>
-        <div class="social-links-grid">
+        <div style="text-align:center; font-size:0.85rem; color:#6e99b8;" id="socialTitle">江湖驿站</div>
+        <div class="social-links-grid" id="socialLinksGrid">
           <a href="https://flagos.io/Home" target="_blank" class="social-link">官网</a>
           <a href="https://github.com/flagos-ai" target="_blank" class="social-link">GitHub</a>
           <a href="https://xhslink.com/m/3ICKAAaP2Lm" target="_blank" class="social-link">小红书</a>
           <a href="https://space.bilibili.com/3546791834290849" target="_blank" class="social-link">B站</a>
           <a href="https://www.zhihu.com/people/95-22-20-18/posts" target="_blank" class="social-link">知乎</a>
-          <a href="https://discord.gg/BwavgwVEkk" target="_blank" class="social-link">Discord</a>
+          <a href="https://discord.com/invite/ubqGuFMTNE" target="_blank" class="social-link">Discord</a>
         </div>
       </div>
       <div id="quizScreen" class="hidden">
@@ -192,10 +210,11 @@
         </div>
         <div class="question-block">
           <div class="question-text" id="questionText"></div>
-          <div class="question-hint">不确定答案？可查看现场展区介绍、技术手册或官网了解哦</div>
+          <div class="question-hint" id="questionHint">不确定答案？可查看现场展区介绍、技术手册或官网了解哦</div>
           <div class="options-list" id="optionsContainer"></div>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+          <button class="back-btn" id="backBtn" onclick="goBackQuestion()" style="visibility:hidden;">◄</button>
           <span style="font-size:0.85rem; color:#6b8aa8;" id="typeHint"></span>
           <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一招 →</button>
         </div>
@@ -211,48 +230,170 @@
   </div>
 
   <script>
-    // BGM：忆 - SCHAT10（影）
-    const bgmUrl = 'https://music.163.com/song/media/outer/url?id=1411949011.mp3';
+    // 中英文数据
+    const i18n = {
+      zh: {
+        prizeTitle: '江湖奖赏', prizeLevel1: '一统江湖', prizeDetail1: '80-100分 · 万能插座等精美周边',
+        prizeLevel2: '逍遥游侠', prizeDetail2: '60-80分 · 钥匙扣',
+        prizeLevel3: '无名小卒', prizeDetail3: '0-60分 · 无', prizeClose: '关闭',
+        characterTitle: '江湖人物志', characterClose: '关闭',
+        mainTitle: 'FlagOS<br>知识闯关', subTitle: '江湖令：FlagOS盟主争夺',
+        homeDesc: '抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br><span style="color:#8aaacc;">一起解锁</span><strong style="color:#ffd966;">FlagOS独特身份</strong><span style="color:#8aaacc;">和</span><strong style="color:#ffd966;">精美周边</strong>',
+        startBtn: '开启试炼', prizeBtn: '赏格一览', characterBtn: '人物志', socialTitle: '江湖驿站',
+        progressText: '内力 ', questionHint: '不确定答案？可查看现场展区介绍、技术手册或官网了解哦',
+        typeSingle: '【单枪匹马·单选】', typeMultiple: '【群英荟萃·多选】',
+        nextBtn: '下一招 →', submitBtn: '提交答卷 · 论剑',
+        saveHint: '请保存此界面，凭分数至兑奖处领取奖赏',
+        guideText: '点击按钮，关注以下江湖驿站，<br>返回本页面即可<strong style="color:#ffd966;">再次挑战</strong>！',
+        retryBtn: '再战江湖',
+        characters: [
+          { role:'master', title:'一统江湖 · FlagOS盟主', mbti:'ROOT', desc:'深居FlagOS总舵，通晓编译器、训练框架与使能全链路。如隐世前辈般深不可测，一指便能将模型点化到任意芯片。此人言“兼容”，江湖便兼容。' },
+          { role:'ranger', title:'逍遥游侠 · 跨芯行者', mbti:'FORK', desc:'能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。' },
+          { role:'apprentice', title:'无名小卒 · 算子学徒', mbti:'BUG', desc:'刚入山门的初学者，算子代码写一句报三句，常把Triton与LLVM念反，但勤读残卷，眼中已有光。' }
+        ],
+        masterDesc: '盟主已臻化境，已是FlagOS江湖登顶大宗师。通晓编译器，训练框架与使能全链路。如隐世前辈般深不可测，一指便能将模型点化到任意芯片。执掌ROOT权限，此人言“兼容”，江湖便兼容。',
+        rangerDesc: '能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。',
+        apprenticeDesc: '刚入山门的初学者，算子代码写一句报三句，常把Triton与LLVM念反。但每日勤读残卷，眼神已渐有光。',
+        rangerComment: '侠客这把钥匙扣刻着“FlagOS”，往后江湖也算有头有脸。下次武林大会怕要坐上位了。',
+        apprenticeComment: '侠客别急，报错也是修为。<br>下次多看看FlagOS的修炼心法。',
+        socialLinks: ['官网', 'GitHub', '小红书', 'B站', '知乎', 'Discord'],
+        questions: [
+          { id: 1, type: 'single', question: 'FlagOS 是什么类型的产品？', options: ['大模型训练框架', '统一的 AI 系统软件平台', 'AI 芯片设计工具'], answer: 1 },
+          { id: 8, type: 'single', question: 'FlagOS 的生态建设核心理念是什么？', options: ['烟囱式垂直整合', '统一互联互通', '封闭商业授权'], answer: 1 },
+          { id: 'lang', type: 'single', question: 'FlagOS 提出了哪些算子编程语言？', options: ['Triton', 'Triton - TLE', 'TileLang'], answer: 1 },
+          { id: 11, type: 'single', question: 'FlagOS 的统一编译器 FlagTree 基于以下哪个项目深度定制？', options: ['Triton', 'LLVM', 'PyTorch'], answer: 0 },
+          { id: 12, type: 'single', question: 'FlagOS-Robo 核心解决了具身智能行业的哪些痛点？', options: ['机器人本体设计', '跨平台跨硬件的算法快速迁移', '具身模型预训练'], answer: 1 },
+          { id: 9, type: 'single', question: '以下哪个 FlagOS 工具可实现算子开发周期缩短至 “小时” 级？', options: ['KernelGen', 'FlagPerf', 'FlagScale'], answer: 0 },
+          { id: 'exclude', type: 'single', question: 'FlagOS 技术栈 DAY 0 实现的大模型多芯适配不包括？', options: ['DeepSeek V4', 'Qwen3.6', 'MiniMax M2.7', 'MiniCPM-o4.5', 'GLM-5.1'], answer: 4 },
+          { id: 14, type: 'single', question: 'FlagOS 应用场景不包括哪些领域？', options: ['大模型训推', '科学计算', '机器人端云协同', '自动驾驶'], answer: 3 },
+          { id: 13, type: 'multiple', question: 'FlagOS 的核心组件包括以下哪些？', options: ['算子库 FlagGems', '统一 AI 编译器 FlagTree', '统一通信库 Flag CX', '并行训练训练推框架 FlagScale'], answer: [0,1,2,3] },
+          { id: 6, type: 'multiple', question: '以下关于 FlagGems 说法正确的是？', options: ['是基于 Triton 的高性能算子库', '已加入 PyTorch 基金会生态项目', '其包含的算子，支持多种 AI 芯片', '其算子数量已超过了 400+'], answer: [0,1,2,3] },
+          { id: 10, type: 'multiple', question: 'FlagOS 发布的 12+ Skills 主要能解决以下哪些方面的问题？', options: ['模型适配与迁移', '算子生成与优化', '性能测试与调优', '容器配置与发布流程'], answer: [0,1,2,3] },
+          { id: 7, type: 'multiple', question: '以下关于 FlagRelease 说法正确的是？', options: ['是开源大模型的跨芯迁移与统一发布平台', '致力于提升大模型应用的发布与交付效率', '支持 AI 应用的工程化部署与版本管理', '面向 10 家厂商的 12 款硬件发布了 70 + 个开源模型实例'], answer: [0,1,2,3] },
+          { id: 16, type: 'multiple', question: 'FlagOS 支持哪些芯片架构？', options: ['NVIDIA', 'NPU', 'GPGPU', 'RISC-V AI', 'DSA', 'ARM'], answer: [0,1,2,3,4,5] },
+          { id: 17, type: 'multiple', question: '以下哪些是 FlagOS 生态的合作伙伴类型？', options: ['芯片机构', '大模型机构', '云服务商', '操作系统'], answer: [0,1,2,3] }
+        ]
+      },
+      en: {
+        prizeTitle: 'Rewards', prizeLevel1: 'Master', prizeDetail1: '80-100 · Power strip, gifts',
+        prizeLevel2: 'Wanderer', prizeDetail2: '60-80 · Keychain',
+        prizeLevel3: 'Apprentice', prizeDetail3: '0-60 · None', prizeClose: 'Close',
+        characterTitle: 'Characters', characterClose: 'Close',
+        mainTitle: 'FlagOS<br>Challenge', subTitle: 'Order: FlagOS Master Duel',
+        homeDesc: '<strong style="color:#ffd966;">10</strong> Questions (6 Single · 4 Multiple)<br><span style="color:#8aaacc;">Unlock </span><strong style="color:#ffd966;">FlagOS identity</strong><span style="color:#8aaacc;"> & </span><strong style="color:#ffd966;">gifts</strong>',
+        startBtn: 'Start', prizeBtn: 'Prizes', characterBtn: 'Roles', socialTitle: 'Outposts',
+        progressText: 'Energy ', questionHint: 'Check the exhibition, manual, or official website.',
+        typeSingle: '[Single]', typeMultiple: '[Multiple]',
+        nextBtn: 'Next →', submitBtn: 'Submit',
+        saveHint: 'Save this screen and show it at the prize booth.',
+        guideText: 'Follow the outposts,<br>return to <strong style="color:#ffd966;">retry</strong>!',
+        retryBtn: 'Retry',
+        characters: [
+          { role:'master', title:'Master · FlagOS', mbti:'ROOT', desc:'Residing in FlagOS HQ, mastering compilers and enablement. As unfathomable as a hidden sage.' },
+          { role:'ranger', title:'Wanderer · Cross-Chip', mbti:'FORK', desc:'Freely migrating models across NVIDIA, NPU, GPGPU. Dual-Core Scholar.' },
+          { role:'apprentice', title:'Novice · Apprentice', mbti:'BUG', desc:'One line, three errors. Confuses Triton with LLVM, yet diligently reads the manual.' }
+        ],
+        masterDesc: 'Mastered FlagOS. A grandmaster of compilers, training frameworks, and full enablement. One finger can transform models to any chip.',
+        rangerDesc: 'Freely migrating models across NVIDIA, NPU, GPGPU. Left hand operator library, right hand inference plugin.',
+        apprenticeDesc: 'A beginner writing one line and getting three errors. Often confuses Triton with LLVM. Yet a light shines in their eyes.',
+        rangerComment: '"This keychain is engraved with \'FlagOS\'. You are now someone of note in the jianghu."',
+        apprenticeComment: '"Don\'t worry, errors are cultivation too.<br>Read FlagOS manuals more often."',
+        socialLinks: ['Web', 'GitHub', 'RedNote', 'Bilibili', 'Zhihu', 'Discord'],
+        questions: [
+          { id: 1, type: 'single', question: 'What type of product is FlagOS?', options: ['Training framework', 'Unified AI platform', 'AI chip design tool'], answer: 1 },
+          { id: 8, type: 'single', question: 'Core philosophy of FlagOS ecosystem?', options: ['Vertical silo', 'Unified interoperability', 'Closed licensing'], answer: 1 },
+          { id: 'lang', type: 'single', question: 'Which operator programming language does FlagOS introduce?', options: ['Triton', 'Triton - TLE', 'TileLang'], answer: 1 },
+          { id: 11, type: 'single', question: 'FlagTree is deeply customized based on?', options: ['Triton', 'LLVM', 'PyTorch'], answer: 0 },
+          { id: 12, type: 'single', question: 'FlagOS-Robo addresses which pain point?', options: ['Robot design', 'Cross-platform migration', 'Pre-training'], answer: 1 },
+          { id: 9, type: 'single', question: 'Which tool shortens operator dev to "hour" level?', options: ['KernelGen', 'FlagPerf', 'FlagScale'], answer: 0 },
+          { id: 'exclude', type: 'single', question: 'Day-0 multi-chip adaptation does NOT include?', options: ['DeepSeek V4', 'Qwen3.6', 'MiniMax M2.7', 'MiniCPM-o4.5', 'GLM-5.1'], answer: 4 },
+          { id: 14, type: 'single', question: 'FlagOS scenarios do NOT include?', options: ['Training/Inference', 'Scientific computing', 'Cloud-edge robot', 'Autonomous driving'], answer: 3 },
+          { id: 13, type: 'multiple', question: 'Core components of FlagOS?', options: ['FlagGems', 'FlagTree', 'Flag CX', 'FlagScale'], answer: [0,1,2,3] },
+          { id: 6, type: 'multiple', question: 'Which statements about FlagGems are correct?', options: ['Based on Triton', 'Joined PyTorch Ecosystem', 'Supports multiple AI chips', 'Has over 400 operators'], answer: [0,1,2,3] },
+          { id: 10, type: 'multiple', question: '12+ Skills address which problems?', options: ['Model adaptation', 'Operator optimization', 'Performance tuning', 'Container release'], answer: [0,1,2,3] },
+          { id: 7, type: 'multiple', question: 'Which statements about FlagRelease are correct?', options: ['Cross-chip migration platform', 'Improves delivery efficiency', 'Engineering deployment', '70+ models on 12 hardware'], answer: [0,1,2,3] },
+          { id: 16, type: 'multiple', question: 'FlagOS supports which chip architectures?', options: ['NVIDIA', 'NPU', 'GPGPU', 'RISC-V AI', 'DSA', 'ARM'], answer: [0,1,2,3,4,5] },
+          { id: 17, type: 'multiple', question: 'Ecosystem partner types?', options: ['Chip orgs', 'Model orgs', 'Cloud providers', 'OS vendors'], answer: [0,1,2,3] }
+        ]
+      }
+    };
+
+    let currentLang = 'zh';
+    function t(key) { return i18n[currentLang][key] || ''; }
+
+    function toggleLang() {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+      document.getElementById('langToggle').textContent = currentLang === 'zh' ? 'EN' : '中';
+      applyLanguage();
+    }
+
+    function applyLanguage() {
+      // 奖赏弹窗
+      document.getElementById('prizeTitle').textContent = t('prizeTitle');
+      document.getElementById('prizeLevel1').textContent = t('prizeLevel1');
+      document.getElementById('prizeDetail1').textContent = t('prizeDetail1');
+      document.getElementById('prizeLevel2').textContent = t('prizeLevel2');
+      document.getElementById('prizeDetail2').textContent = t('prizeDetail2');
+      document.getElementById('prizeLevel3').textContent = t('prizeLevel3');
+      document.getElementById('prizeDetail3').textContent = t('prizeDetail3');
+      document.getElementById('prizeCloseBtn').textContent = t('prizeClose');
+      document.getElementById('characterTitle').textContent = t('characterTitle');
+      document.getElementById('characterCloseBtn').textContent = t('characterClose');
+      // 首页
+      document.getElementById('mainTitle').innerHTML = t('mainTitle');
+      document.getElementById('subTitle').textContent = t('subTitle');
+      document.getElementById('homeDesc').innerHTML = t('homeDesc');
+      document.getElementById('startBtn').textContent = t('startBtn');
+      document.getElementById('prizeBtn').textContent = t('prizeBtn');
+      document.getElementById('characterBtn').textContent = t('characterBtn');
+      document.getElementById('socialTitle').textContent = t('socialTitle');
+      const links = document.querySelectorAll('#socialLinksGrid .social-link');
+      const linkTexts = t('socialLinks');
+      if (Array.isArray(linkTexts) && links.length === linkTexts.length) {
+        links.forEach((link, i) => { link.textContent = linkTexts[i]; });
+      }
+      // 答题界面更新
+      if (!document.getElementById('quizScreen').classList.contains('hidden')) {
+        document.getElementById('questionHint').textContent = t('questionHint');
+        if (currentQuestion) {
+          document.getElementById('typeHint').textContent = currentQuestion.type === 'single' ? t('typeSingle') : t('typeMultiple');
+        }
+        updateNextButtonText();
+      }
+      // 结果页重新渲染
+      if (!document.getElementById('resultScreen').classList.contains('hidden') && typeof lastScore !== 'undefined') {
+        renderResult(lastScore);
+      }
+    }
+
+    let lastScore = null;
+    let currentQuestion = null;
+    let quizQuestions = [], currentIndex = 0, score = 0, selectedOptions = null;
+    // 记录用户每道题的选择，用于返回
+    let userAnswers = []; // 每个元素：{ type, selected }
 
     const bgm = document.getElementById('bgm');
     const musicToggle = document.getElementById('musicToggle');
     let musicStarted = false;
 
     function initBgm() {
-      bgm.querySelector('source').src = bgmUrl;
+      bgm.querySelector('source').src = 'https://music.163.com/song/media/outer/url?id=1411949011.mp3';
       bgm.load();
     }
 
     function toggleMusic() {
       if (!musicStarted) {
-        bgm.play().then(() => {
-          musicStarted = true;
-          musicToggle.classList.remove('paused');
-        }).catch(e => {
-          console.log('自动播放被阻止，请手动点击播放');
-          musicToggle.classList.add('paused');
-        });
+        bgm.play().then(() => { musicStarted = true; musicToggle.classList.remove('paused'); }).catch(() => { musicToggle.classList.add('paused'); });
       } else {
-        if (bgm.paused) {
-          bgm.play();
-          musicToggle.classList.remove('paused');
-        } else {
-          bgm.pause();
-          musicToggle.classList.add('paused');
-        }
+        if (bgm.paused) { bgm.play(); musicToggle.classList.remove('paused'); }
+        else { bgm.pause(); musicToggle.classList.add('paused'); }
       }
     }
 
     document.addEventListener('click', function firstPlay() {
-      if (!musicStarted && bgmUrl) {
-        bgm.play().then(() => {
-          musicStarted = true;
-          musicToggle.classList.remove('paused');
-        }).catch(() => {});
-      }
+      if (!musicStarted) { bgm.play().then(() => { musicStarted = true; musicToggle.classList.remove('paused'); }).catch(() => {}); }
     }, { once: true });
 
-    // 图片CDN
     const characterImages = {
       master: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-master.png',
       ranger: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-ranger.png',
@@ -271,25 +412,19 @@
       return `<img src="${url}" alt="角色" style="width:${w}px; height:${h}px; border-radius:16px; object-fit:cover; box-shadow:0 0 15px #2a8cff; cursor:pointer;" ${onClick} onerror="this.style.display='none'">`;
     }
 
-    const questionBank = [
-      { id: 1, type: 'single', question: 'FlagOS 是什么类型的产品？', options: ['大模型训练框架', '统一的 AI 系统软件平台', 'AI 芯片设计工具'], answer: 1 },
-      { id: 8, type: 'single', question: 'FlagOS 的生态建设核心理念是什么？', options: ['烟囱式垂直整合', '统一互联互通', '封闭商业授权'], answer: 1 },
-      { id: 'lang', type: 'single', question: 'FlagOS 提出了哪些算子编程语言？', options: ['Triton', 'Triton - TLE', 'TileLang'], answer: 1 },
-      { id: 11, type: 'single', question: 'FlagOS 的统一编译器 FlagTree 基于以下哪个项目深度定制？', options: ['Triton', 'LLVM', 'PyTorch'], answer: 0 },
-      { id: 12, type: 'single', question: 'FlagOS-Robo 核心解决了具身智能行业的哪些痛点？', options: ['机器人本体设计', '跨平台跨硬件的算法快速迁移', '具身模型预训练'], answer: 1 },
-      { id: 9, type: 'single', question: '以下哪个 FlagOS 工具可实现算子开发周期缩短至 “小时” 级？', options: ['KernelGen', 'FlagPerf', 'FlagScale'], answer: 0 },
-      { id: 'exclude', type: 'single', question: 'FlagOS 技术栈 DAY 0 实现的大模型多芯适配不包括？', options: ['DeepSeek V4', 'Qwen3.6', 'MiniMax M2.7', 'MiniCPM-o4.5', 'GLM-5.1'], answer: 4 },
-      { id: 14, type: 'single', question: 'FlagOS 应用场景不包括哪些领域？', options: ['大模型训推', '科学计算', '机器人端云协同', '自动驾驶'], answer: 3 },
-      { id: 13, type: 'multiple', question: 'FlagOS 的核心组件包括以下哪些？', options: ['算子库 FlagGems', '统一 AI 编译器 FlagTree', '统一通信库 Flag CX', '并行训练训练推框架 FlagScale'], answer: [0,1,2,3] },
-      { id: 6, type: 'multiple', question: '以下关于 FlagGems 说法正确的是？', options: ['是基于 Triton 的高性能算子库', '已加入 PyTorch 基金会生态项目', '其包含的算子，支持多种 AI 芯片', '其算子数量已超过了 400+'], answer: [0,1,2,3] },
-      { id: 10, type: 'multiple', question: 'FlagOS 发布的 12+ Skills 主要能解决以下哪些方面的问题？', options: ['模型适配与迁移', '算子生成与优化', '性能测试与调优', '容器配置与发布流程'], answer: [0,1,2,3] },
-      { id: 7, type: 'multiple', question: '以下关于 FlagRelease 说法正确的是？', options: ['是开源大模型的跨芯迁移与统一发布平台', '致力于提升大模型应用的发布与交付效率', '支持 AI 应用的工程化部署与版本管理', '面向 10 家厂商的 12 款硬件发布了 70 + 个开源模型实例'], answer: [0,1,2,3] },
-      { id: 16, type: 'multiple', question: 'FlagOS 支持哪些芯片架构？', options: ['NVIDIA', 'NPU', 'GPGPU', 'RISC-V AI', 'DSA', 'ARM'], answer: [0,1,2,3,4,5] },
-      { id: 17, type: 'multiple', question: '以下哪些是 FlagOS 生态的合作伙伴类型？', options: ['芯片机构', '大模型机构', '云服务商', '操作系统'], answer: [0,1,2,3] }
-    ];
-    let quizQuestions = [], currentIndex = 0, score = 0, selectedOptions = null;
+    function getCurrentQuestions() {
+      return t('questions');
+    }
+
+    const questionBankZh = i18n.zh.questions;
+    const questionBankEn = i18n.en.questions;
+
+    function getQuestionBank() {
+      return currentLang === 'zh' ? questionBankZh : questionBankEn;
+    }
+
     function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+
     function showScreen(screenId) {
       const card = document.getElementById('mainCard');
       card.classList.add('screen-transition');
@@ -299,7 +434,7 @@
         card.classList.remove('screen-transition');
       }, 200);
     }
-    function trackEvent(e,d={}){ console.log('[Track]',e,d); }
+
     function openPrizeModal(){ document.getElementById('prizeModal').classList.remove('hidden'); }
     function closePrizeModal(){ document.getElementById('prizeModal').classList.add('hidden'); }
     function openCharacterModal(){ 
@@ -307,12 +442,9 @@
       buildCharacterList();
     }
     function closeCharacterModal(){ document.getElementById('characterModal').classList.add('hidden'); }
+
     function buildCharacterList() {
-      const characters = [
-        { role:'master', title:'一统江湖 · FlagOS盟主', mbti:'ROOT', desc:'深居FlagOS总舵，通晓编译器、训练框架与使能全链路。如隐世前辈般深不可测，一指便能将模型点化到任意芯片。此人言“兼容”，江湖便兼容。' },
-        { role:'ranger', title:'逍遥游侠 · 跨芯行者', mbti:'FORK', desc:'能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。' },
-        { role:'apprentice', title:'无名小卒 · 算子学徒', mbti:'BUG', desc:'刚入山门的初学者，算子代码写一句报三句，常把Triton与LLVM念反，但勤读残卷，眼中已有光。' }
-      ];
+      const characters = t('characters');
       const container = document.getElementById('characterList');
       container.innerHTML = characters.map(c => `
         <div class="char-card">
@@ -325,35 +457,66 @@
         </div>
       `).join('');
     }
+
     function startQuiz(){
-      const singles = questionBank.filter(q=>q.type==='single');
-      const multiples = questionBank.filter(q=>q.type==='multiple');
+      const bank = getQuestionBank();
+      const singles = bank.filter(q=>q.type==='single');
+      const multiples = bank.filter(q=>q.type==='multiple');
       quizQuestions = [...shuffle(singles).slice(0,6), ...shuffle(multiples).slice(0,4)];
       currentIndex=0; score=0; selectedOptions=null;
-      trackEvent('quiz_start');
+      userAnswers = new Array(quizQuestions.length).fill(null);
       showScreen('quizScreen');
       renderQuestion();
     }
+
     function renderQuestion(){
       if(currentIndex>=quizQuestions.length){ finishQuiz(); return; }
-      const q=quizQuestions[currentIndex];
-      document.getElementById('questionText').textContent=q.question;
-      document.getElementById('progressText').textContent=`内力 ${currentIndex+1}/${quizQuestions.length}`;
+      currentQuestion = quizQuestions[currentIndex];
+      document.getElementById('questionText').textContent = currentQuestion.question;
+      document.getElementById('progressText').textContent = t('progressText') + `${currentIndex+1}/${quizQuestions.length}`;
       document.getElementById('progressFill').style.width=`${(currentIndex/quizQuestions.length)*100}%`;
-      document.getElementById('typeHint').textContent = q.type==='single' ? '【单枪匹马·单选】' : '【群英荟萃·多选】';
+      document.getElementById('typeHint').textContent = currentQuestion.type==='single' ? t('typeSingle') : t('typeMultiple');
+      document.getElementById('questionHint').textContent = t('questionHint');
       const container=document.getElementById('optionsContainer');
       container.innerHTML='';
-      selectedOptions = q.type==='single' ? null : [];
-      q.options.forEach((opt,idx)=>{
+
+      // 恢复已选中的答案
+      const prev = userAnswers[currentIndex];
+      selectedOptions = currentQuestion.type==='single' ? (prev ? prev.selected : null) : (prev ? [...prev.selected] : []);
+
+      currentQuestion.options.forEach((opt,idx)=>{
         const item=document.createElement('div');
         item.className='option-item';
+        if (currentQuestion.type==='single' && selectedOptions === idx) item.classList.add('selected');
+        if (currentQuestion.type==='multiple' && selectedOptions && selectedOptions.includes(idx)) item.classList.add('selected');
         item.innerHTML=`<span class="option-indicator">${String.fromCharCode(65+idx)}</span>${opt}`;
-        item.addEventListener('click',(e) => selectOption(idx, q.type, e, item));
+        item.addEventListener('click',(e) => selectOption(idx, currentQuestion.type, e, item));
         container.appendChild(item);
       });
-      document.getElementById('nextBtn').disabled=true;
-      document.getElementById('nextBtn').innerHTML = currentIndex===quizQuestions.length-1 ? '提交答卷 · 论剑' : '下一招 →';
+      document.getElementById('nextBtn').disabled = currentQuestion.type==='single' ? (selectedOptions===null) : (selectedOptions.length===0);
+      updateNextButtonText();
+      // 控制返回按钮
+      const backBtn = document.getElementById('backBtn');
+      if (currentIndex > 0) {
+        backBtn.style.visibility = 'visible';
+      } else {
+        backBtn.style.visibility = 'hidden';
+      }
     }
+
+    function goBackQuestion() {
+      if (currentIndex <= 0) return;
+      // 保存当前选择
+      userAnswers[currentIndex] = { type: currentQuestion.type, selected: selectedOptions };
+      currentIndex--;
+      renderQuestion();
+    }
+
+    function updateNextButtonText() {
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.innerHTML = currentIndex===quizQuestions.length-1 ? t('submitBtn') : t('nextBtn');
+    }
+
     function selectOption(idx, type, event, element){
       const items=document.querySelectorAll('.option-item');
       if(event){
@@ -373,7 +536,10 @@
         items.forEach((el,i)=>{ if(selectedOptions.includes(i)) el.classList.add('selected'); else el.classList.remove('selected'); });
         document.getElementById('nextBtn').disabled=selectedOptions.length===0;
       }
+      // 实时保存当前选择
+      userAnswers[currentIndex] = { type: type, selected: selectedOptions };
     }
+
     function nextQuestion(){
       const q=quizQuestions[currentIndex];
       let correct=false;
@@ -384,86 +550,84 @@
         correct=JSON.stringify(sortedUser)===JSON.stringify(sortedAns);
       }
       if(correct) score+=10;
+      // 保存答案后前进
+      userAnswers[currentIndex] = { type: q.type, selected: selectedOptions };
       currentIndex++;
       if(currentIndex>=quizQuestions.length) finishQuiz();
       else renderQuestion();
     }
-    function getTitleAndDesc(score) {
-      if (score >= 80) return {
-        title: '一统江湖 · FlagOS盟主', mbti: 'ROOT',
-        desc: '盟主已臻化境，已是FlagOS江湖登顶大宗师。通晓编译器，训练框架与使能全链路。如隐世前辈般深不可测，一指便能将模型点化到任意芯片。执掌ROOT权限，此人言“兼容”，江湖便兼容。',
-        comment: '',
-        prize: '万能插座等精美周边', role: 'master'
+
+    function getTitleAndDesc(sc) {
+      if (sc >= 80) return {
+        title: t('characters')[0].title, mbti: 'ROOT',
+        desc: t('masterDesc'), comment: '',
+        prize: currentLang === 'zh' ? '万能插座等精美周边' : 'Power strip & gifts', role: 'master'
       };
-      else if (score >= 60) return {
-        title: '逍遥游侠 · 跨芯行者', mbti: 'FORK',
-        desc: '能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。',
-        comment: '侠客这把钥匙扣刻着“FlagOS”，往后江湖也算有头有脸。下次武林大会怕要坐上位了。',
-        prize: '钥匙扣', role: 'ranger'
+      else if (sc >= 60) return {
+        title: t('characters')[1].title, mbti: 'FORK',
+        desc: t('rangerDesc'),
+        comment: t('rangerComment'),
+        prize: currentLang === 'zh' ? '钥匙扣' : 'Keychain', role: 'ranger'
       };
       else return {
-        title: '无名小卒 · 算子学徒', mbti: 'BUG',
-        desc: '刚入山门的初学者，算子代码写一句报三句，常把Triton与LLVM念反。但每日勤读残卷，眼神已渐有光。',
-        comment: '侠客别急，报错也是修为。<br>下次多看看FlagOS的修炼心法。',
-        prize: '无', role: 'apprentice'
+        title: t('characters')[2].title, mbti: 'BUG',
+        desc: t('apprenticeDesc'),
+        comment: t('apprenticeComment'),
+        prize: currentLang === 'zh' ? '无' : 'None', role: 'apprentice'
       };
     }
-    function finishQuiz(){
-      document.getElementById('progressFill').style.width='100%';
-      trackEvent('quiz_finish',{score});
-      showScreen('resultScreen');
-      const container=document.getElementById('resultContent');
-      const data = getTitleAndDesc(score);
-      const figureHtml = getCharacterImage(data.role);
-      const saveHint = '<p style="margin-top:8px; color:#ffd966; font-size:0.85rem;">请保存此界面，凭分数至兑奖处领取奖赏</p>';
 
+    function renderResult(sc) {
+      const container = document.getElementById('resultContent');
+      const data = getTitleAndDesc(sc);
+      const figureHtml = getCharacterImage(data.role);
+      const saveHint = `<p style="margin-top:8px; color:#ffd966; font-size:0.85rem;">${t('saveHint')}</p>`;
       const socialLinksHtml = `
         <div class="social-links-grid">
-          <a href="https://flagos.io/Home" target="_blank" class="social-link clickable-social">官网</a>
-          <a href="https://github.com/flagos-ai" target="_blank" class="social-link clickable-social">GitHub</a>
-          <a href="https://xhslink.com/m/3ICKAAaP2Lm" target="_blank" class="social-link clickable-social">小红书</a>
-          <a href="https://space.bilibili.com/3546791834290849" target="_blank" class="social-link clickable-social">B站</a>
-          <a href="https://www.zhihu.com/people/95-22-20-18/posts" target="_blank" class="social-link clickable-social">知乎</a>
-          <a href="https://discord.gg/BwavgwVEkk" target="_blank" class="social-link clickable-social">Discord</a>
+          <a href="https://flagos.io/Home" target="_blank" class="social-link clickable-social">${t('socialLinks')[0]}</a>
+          <a href="https://github.com/flagos-ai" target="_blank" class="social-link clickable-social">${t('socialLinks')[1]}</a>
+          <a href="https://xhslink.com/m/3ICKAAaP2Lm" target="_blank" class="social-link clickable-social">${t('socialLinks')[2]}</a>
+          <a href="https://space.bilibili.com/3546791834290849" target="_blank" class="social-link clickable-social">${t('socialLinks')[3]}</a>
+          <a href="https://www.zhihu.com/people/95-22-20-18/posts" target="_blank" class="social-link clickable-social">${t('socialLinks')[4]}</a>
+          <a href="https://discord.com/invite/ubqGuFMTNE" target="_blank" class="social-link clickable-social">${t('socialLinks')[5]}</a>
         </div>
       `;
-
-      const guideHtml = '<p class="guide-text">点击按钮，关注以下江湖驿站，<br>返回本页面即可<strong style="color:#ffd966;">再次挑战</strong>！</p>';
-
-      const btnText = '再战江湖';
+      const guideHtml = `<p class="guide-text">${t('guideText')}</p>`;
+      const btnText = t('retryBtn');
       const btnId = 'retryBtn';
-
       const commentHtml = data.comment ? `<p style="color:#b0cce5; font-style:italic; margin:6px 0;">“${data.comment}”</p>` : '';
 
       container.innerHTML = `
         <div class="char-figure">${figureHtml}</div>
-        <div class="result-score">${score} 分</div>
+        <div class="result-score">${sc} 分</div>
         <div style="font-size:1.6rem; color:#ffd966; font-weight:bold; letter-spacing:3px; margin:4px 0;">${data.title}</div>
         <div class="mbti-badge">${data.mbti}</div>
-        <div class="title-card"><p>${data.desc}</p><p style="margin-top:6px; color:#ffd966; text-align:center;">奖赏：${data.prize}</p></div>
+        <div class="title-card"><p>${data.desc}</p><p style="margin-top:6px; color:#ffd966; text-align:center;">${currentLang === 'zh' ? '奖赏' : 'Prize'}：${data.prize}</p></div>
         ${commentHtml}
         ${guideHtml}
         ${socialLinksHtml}
         <button class="btn btn-secondary hidden" id="${btnId}" onclick="retryQuiz()">${btnText}</button>
         ${saveHint}
       `;
-
       const retryBtn = document.getElementById(btnId);
       document.querySelectorAll('.clickable-social').forEach(link=>{
         link.addEventListener('click', function(e){
           if(retryBtn) retryBtn.classList.remove('hidden');
-          trackEvent('social_click');
         });
       });
+    }
 
-      trackEvent('result_shown');
+    function finishQuiz(){
+      document.getElementById('progressFill').style.width='100%';
+      lastScore = score;
+      showScreen('resultScreen');
+      renderResult(score);
     }
-    function retryQuiz(){ 
-      startQuiz();
-    }
+
+    function retryQuiz(){ startQuiz(); }
 
     initBgm();
-    trackEvent('page_view');
+    applyLanguage();
   </script>
 </body>
 </html>
