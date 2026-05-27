@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=yes">
-  <title>FlagOS 算力江湖 · 知识试炼</title>
+  <title>FlagOS 算力江湖 · 知识闯关</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -102,11 +102,41 @@
     .title-card p { color:#b0cce5; font-size:0.9rem; line-height:1.5; }
     .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 10px; border-radius:12px; font-size:0.75rem; letter-spacing:2px; margin:4px 0; font-weight:bold; }
     .guide-text { font-size:0.85rem; color:#6e99b8; margin:10px 0; line-height:1.6; word-break:keep-all; }
+
+    /* 音乐控制按钮 */
+    .music-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 99;
+      width: 44px; height: 44px; background: rgba(6,18,28,0.8);
+      border: 2px solid #2a8cff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #c0e1ff; font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(42,140,255,0.5);
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .music-toggle:hover {
+      background: rgba(42,140,255,0.3);
+      box-shadow: 0 0 25px rgba(42,140,255,0.9);
+    }
+    .music-toggle.paused {
+      opacity: 0.6;
+      color: #6b8aa8;
+    }
   </style>
 </head>
 <body>
   <div class="tech-bg"></div>
   <div class="light-sweep"></div>
+
+  <!-- 音乐控制按钮 -->
+  <div id="musicToggle" class="music-toggle paused" onclick="toggleMusic()" title="音乐开关">♪</div>
+
+  <!-- 背景音乐 -->
+  <audio id="bgm" loop preload="auto" style="display:none;">
+    <source src="https://music.163.com/song/media/outer/url?id=1843719177.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="app-container" id="appContainer">
     <div class="toast" id="toast"></div>
     <div class="prize-modal-overlay hidden" id="prizeModal">
@@ -130,13 +160,13 @@
     <div class="card" id="mainCard">
       <div id="homeScreen">
         <div class="title-section">
-          <h1 class="main-title">FlagOS<br>知识试炼</h1>
-          <p class="sub-title">江湖令 · 算力江湖</p>
+          <h1 class="main-title">FlagOS<br>知识闯关</h1>
+          <p class="sub-title">江湖令：FlagOS盟主争夺</p>
         </div>
         <div class="divider"><span class="divider-line"></span><span class="divider-icon">&#9876;</span><span class="divider-line"></span></div>
         <p style="text-align:center; margin-bottom:10px; color:#8aaacc; font-size:0.95rem;">
           抽取 <strong style="color:#ffd966;">10</strong> 道考题（6单选 · 4多选）<br>
-          <span style="color:#ffd966;">80分以上可获 <strong style="color:#fff;">FlagOS盟主</strong> 荣誉及精美礼品！</span>
+          <strong style="color:#ffd966;">80分以上</strong><span style="color:#8aaacc;">可解锁</span><strong style="color:#ffd966;">FlagOS独特身份</strong><span style="color:#8aaacc;">和</span><strong style="color:#ffd966;">精美周边</strong>
         </p>
         <div style="margin-bottom:20px;">
           <div style="display:flex; justify-content:center; margin-bottom:10px;">
@@ -184,6 +214,49 @@
   </div>
 
   <script>
+    // ==================== BGM 配置：关山（国风纯音乐）- 森林乐团 ====================
+    const bgmUrl = 'https://music.163.com/song/media/outer/url?id=1843719177.mp3';
+    // ============================================================================
+
+    // 音乐控制
+    const bgm = document.getElementById('bgm');
+    const musicToggle = document.getElementById('musicToggle');
+    let musicStarted = false;
+
+    function initBgm() {
+      bgm.querySelector('source').src = bgmUrl;
+      bgm.load();
+    }
+
+    function toggleMusic() {
+      if (!musicStarted) {
+        bgm.play().then(() => {
+          musicStarted = true;
+          musicToggle.classList.remove('paused');
+        }).catch(e => {
+          console.log('自动播放被阻止，请手动点击播放');
+          musicToggle.classList.add('paused');
+        });
+      } else {
+        if (bgm.paused) {
+          bgm.play();
+          musicToggle.classList.remove('paused');
+        } else {
+          bgm.pause();
+          musicToggle.classList.add('paused');
+        }
+      }
+    }
+
+    document.addEventListener('click', function firstPlay() {
+      if (!musicStarted && bgmUrl) {
+        bgm.play().then(() => {
+          musicStarted = true;
+          musicToggle.classList.remove('paused');
+        }).catch(() => {});
+      }
+    }, { once: true });
+
     // 使用 jsDelivr CDN 加速图片加载
     const characterImages = {
       master: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-master.png',
@@ -242,7 +315,7 @@
     function buildCharacterList() {
       const characters = [
         { role:'master', title:'一统江湖 · FlagOS盟主', mbti:'ROOT', desc:'深居FlagOS总舵，通晓编译器、训练框架与使能全链路。如隐世前辈般深不可测，一指便能将模型点化到任意芯片。此人言“兼容”，江湖便兼容。' },
-        { role:'ranger', title:'逍遥游侠 · 跨芯行者', mbti:'FORK', desc:'能在Nvidia、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。' },
+        { role:'ranger', title:'逍遥游侠 · 跨芯行者', mbti:'FORK', desc:'能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。' },
         { role:'apprentice', title:'无名小卒 · 算子学徒', mbti:'BUG', desc:'刚入山门的初学者，算子代码写一句报三句，常把Triton与LLVM念反，但勤读残卷，眼中已有光。' }
       ];
       const container = document.getElementById('characterList');
@@ -329,7 +402,7 @@
       };
       else if (score >= 60) return {
         title: '逍遥游侠 · 跨芯行者', mbti: 'FORK',
-        desc: '能在Nvidia、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。',
+        desc: '能在NVIDIA、NPU、GPGPU间自由迁移模型，左手算子库右手推理插件，洒脱如风。',
         comment: '侠客这把钥匙扣刻着“FlagOS”，往后江湖也算有头有脸。下次武林大会怕要坐上位了。',
         prize: '钥匙扣', role: 'ranger'
       };
@@ -394,6 +467,8 @@
       startQuiz();
     }
 
+    // 初始化背景音乐
+    initBgm();
     trackEvent('page_view');
   </script>
 </body>
