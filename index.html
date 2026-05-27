@@ -24,7 +24,6 @@
     .card.screen-transition { opacity:0; transform:scale(0.98); }
     .card::before { content:""; position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid rgba(0,160,255,0.25); border-radius:inherit; pointer-events:none; background: repeating-linear-gradient(0deg, rgba(0,160,255,0.03) 0px, rgba(0,160,255,0.03) 4px, transparent 4px, transparent 8px); }
     .card::after { content:""; position:absolute; top:6px; right:6px; width:20px; height:20px; border-right:2px solid #2a8cff; border-top:2px solid #2a8cff; opacity:0.6; }
-
     .title-section { text-align:center; margin-bottom:20px; }
     .main-title {
       font-family: 'STKaiti','KaiTi','Noto Serif SC',serif;
@@ -41,7 +40,6 @@
       display:inline-block; border:1px solid rgba(0,160,255,0.5);
       text-shadow: none;
     }
-
     .divider { display:flex; align-items:center; justify-content:center; gap:12px; margin:20px 0; }
     .divider-line { flex:1; height:2px; background:linear-gradient(90deg, transparent, rgba(0,160,255,0.7), rgba(160,200,255,0.9), rgba(0,160,255,0.7), transparent); }
     .divider-icon { font-size:1.4rem; color:#2a8cff; text-shadow:0 0 12px #2a8cff; }
@@ -51,7 +49,6 @@
     .btn:active { transform:scale(0.96); box-shadow:0 0 35px rgba(42,140,255,0.9), 0 0 10px #2a8cff; background:rgba(8,32,52,0.95); color:#fff; }
     .btn-secondary { background:rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7); box-shadow:0 0 15px rgba(70,130,190,0.35); }
     .btn-sm { font-size:0.85rem; padding:8px 18px; letter-spacing:2px; }
-    .btn-xs { padding:8px 12px; font-size:0.8rem; letter-spacing:1px; }
     .progress-wrap { margin:15px 0 20px; }
     .progress-bar { width:100%; height:12px; background:rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; border:1px solid rgba(0,160,255,0.3); box-shadow:0 0 10px rgba(0,160,255,0.2) inset; }
     .progress-fill { height:100%; background:linear-gradient(90deg, #0a3a6a, #2a8cff, #8cc6ff); border-radius:10px; transition:width 0.4s ease; box-shadow:0 0 20px #2a8cff; }
@@ -68,12 +65,10 @@
     @keyframes dotFlash { 0% { opacity:1; transform:scale(0.5); } 100% { opacity:0; transform:scale(2); } }
     .option-indicator { width:24px; height:24px; border-radius:50%; border:2px solid rgba(80,160,240,0.8); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.75rem; color:#2a8cff; background:rgba(0,0,0,0.3); transition:all 0.25s; }
     .option-item.selected .option-indicator { background:#2a8cff; color:#081a24; box-shadow:0 0 16px #2a8cff; }
-
     .result-section { text-align:center; }
     .result-score { font-size:3rem; font-weight:bold; background:linear-gradient(180deg, #dcf0ff 0%, #5da6ff 60%, #0a3c6e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:6px 0; text-shadow:0 0 20px #2a8cff; }
     .char-figure { margin: 2px auto; }
     .char-figure img { display:block; margin:0 auto; width:120px; height:150px; border-radius:16px; box-shadow:0 0 25px #2a8cff; object-fit:cover; cursor:pointer; }
-
     .social-links-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:10px 0; }
     .social-links-grid .social-link { flex:1 1 30%; min-width:80px; justify-content:center; }
     .social-link { display:flex; align-items:center; gap:6px; background:rgba(8,24,36,0.7); border:1px solid rgba(70,130,180,0.6); border-radius:20px; padding:8px 12px; color:#b8d4ec; text-decoration:none; font-size:0.9rem; transition:all 0.2s; cursor:pointer; }
@@ -103,55 +98,23 @@
     .title-card p { color:#b0cce5; font-size:0.9rem; line-height:1.5; }
     .mbti-badge { display:inline-block; background:#2a8cff; color:#081a24; padding:2px 10px; border-radius:12px; font-size:0.75rem; letter-spacing:2px; margin:4px 0; font-weight:bold; }
     .guide-text { font-size:0.85rem; color:#6e99b8; margin:10px 0; line-height:1.6; word-break:keep-all; }
-
-    .music-toggle {
-      position: fixed; bottom: 20px; right: 20px; z-index: 99;
-      width: 44px; height: 44px; background: rgba(6,18,28,0.8);
-      border: 2px solid #2a8cff; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: #c0e1ff; font-size: 1.2rem;
-      box-shadow: 0 0 15px rgba(42,140,255,0.5);
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
+    .music-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 99; width: 44px; height: 44px; background: rgba(6,18,28,0.8); border: 2px solid #2a8cff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #c0e1ff; font-size: 1.2rem; box-shadow: 0 0 15px rgba(42,140,255,0.5); transition: all 0.3s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     .music-toggle:hover { background: rgba(42,140,255,0.3); box-shadow: 0 0 25px rgba(42,140,255,0.9); }
     .music-toggle.paused { opacity: 0.6; color: #6b8aa8; }
-
-    .lang-toggle {
-      position: fixed; bottom: 20px; right: 70px; z-index: 99;
-      width: 44px; height: 44px; background: rgba(6,18,28,0.8);
-      border: 2px solid #2a8cff; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: #c0e1ff; font-size: 0.9rem;
-      box-shadow: 0 0 15px rgba(42,140,255,0.5);
-      transition: all 0.3s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      font-weight: bold;
-    }
+    .lang-toggle { position: fixed; bottom: 20px; right: 70px; z-index: 99; width: 44px; height: 44px; background: rgba(6,18,28,0.8); border: 2px solid #2a8cff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #c0e1ff; font-size: 0.9rem; box-shadow: 0 0 15px rgba(42,140,255,0.5); transition: all 0.3s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-weight: bold; }
     .lang-toggle:hover { background: rgba(42,140,255,0.3); box-shadow: 0 0 25px rgba(42,140,255,0.9); }
-
-    /* 返回上一题按钮 */
-    .back-btn {
-      background: rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7);
-      box-shadow:0 0 15px rgba(70,130,190,0.35); color:#cfe4ff;
-      padding:10px 16px; border-radius:20px; font-size:1rem; cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:4px; font-weight:bold;
-    }
+    .back-btn { background: rgba(8,28,42,0.8); border:1px solid rgba(80,150,210,0.7); box-shadow:0 0 15px rgba(70,130,190,0.35); color:#cfe4ff; padding:10px 16px; border-radius:20px; font-size:1rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:4px; font-weight:bold; }
     .back-btn:active { background: rgba(42,140,255,0.3); box-shadow: 0 0 20px #2a8cff; }
   </style>
 </head>
 <body>
   <div class="tech-bg"></div>
   <div class="light-sweep"></div>
-
   <div id="musicToggle" class="music-toggle paused" onclick="toggleMusic()" title="音乐开关">♪</div>
   <div id="langToggle" class="lang-toggle" onclick="toggleLang()" title="Switch Language">EN</div>
-
   <audio id="bgm" loop preload="auto" style="display:none;">
     <source src="https://music.163.com/song/media/outer/url?id=1411949011.mp3" type="audio/mpeg">
   </audio>
-
   <div class="app-container" id="appContainer">
     <div class="toast" id="toast"></div>
     <div class="prize-modal-overlay hidden" id="prizeModal">
@@ -224,13 +187,19 @@
       </div>
     </div>
   </div>
-
   <div id="lightbox" class="lightbox hidden" onclick="closeLightbox()">
     <img id="lightboxImg" src="" alt="预览" />
   </div>
 
   <script>
-    // 中英文数据
+    // ========== 图片CDN（可自行替换）==========
+    const characterImages = {
+      master: 'https://fastly.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-master.png',
+      ranger: 'https://fastly.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-ranger.png',
+      apprentice: 'https://fastly.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-apprentice.png'
+    };
+
+    // ========== 双语字典 ==========
     const i18n = {
       zh: {
         prizeTitle: '江湖奖赏', prizeLevel1: '一统江湖', prizeDetail1: '80-100分 · 万能插座等精美周边',
@@ -321,6 +290,7 @@
     let currentLang = 'zh';
     function t(key) { return i18n[currentLang][key] || ''; }
 
+    // 语言切换
     function toggleLang() {
       currentLang = currentLang === 'zh' ? 'en' : 'zh';
       document.getElementById('langToggle').textContent = currentLang === 'zh' ? 'EN' : '中';
@@ -328,7 +298,7 @@
     }
 
     function applyLanguage() {
-      // 奖赏弹窗
+      // 弹窗文本
       document.getElementById('prizeTitle').textContent = t('prizeTitle');
       document.getElementById('prizeLevel1').textContent = t('prizeLevel1');
       document.getElementById('prizeDetail1').textContent = t('prizeDetail1');
@@ -339,7 +309,7 @@
       document.getElementById('prizeCloseBtn').textContent = t('prizeClose');
       document.getElementById('characterTitle').textContent = t('characterTitle');
       document.getElementById('characterCloseBtn').textContent = t('characterClose');
-      // 首页
+      // 首页文本
       document.getElementById('mainTitle').innerHTML = t('mainTitle');
       document.getElementById('subTitle').textContent = t('subTitle');
       document.getElementById('homeDesc').innerHTML = t('homeDesc');
@@ -352,25 +322,38 @@
       if (Array.isArray(linkTexts) && links.length === linkTexts.length) {
         links.forEach((link, i) => { link.textContent = linkTexts[i]; });
       }
-      // 答题界面更新
+
+      // 如果正在答题界面，同步更新题目
       if (!document.getElementById('quizScreen').classList.contains('hidden')) {
+        updateQuizQuestionsForLanguage();
+        renderQuestion(); // 重新渲染当前题目（保持进度和选项）
         document.getElementById('questionHint').textContent = t('questionHint');
-        if (currentQuestion) {
-          document.getElementById('typeHint').textContent = currentQuestion.type === 'single' ? t('typeSingle') : t('typeMultiple');
-        }
-        updateNextButtonText();
       }
-      // 结果页重新渲染
+      // 如果正在结果页，重新渲染结果
       if (!document.getElementById('resultScreen').classList.contains('hidden') && typeof lastScore !== 'undefined') {
         renderResult(lastScore);
+      }
+    }
+
+    // 根据当前语言重新映射题库，保持顺序和 ID 一致
+    function updateQuizQuestionsForLanguage() {
+      const newBank = i18n[currentLang].questions;
+      // 通过原始ID匹配
+      const updatedQuestions = quizQuestions.map(oldQ => {
+        const found = newBank.find(q => q.id === oldQ.id);
+        return found || oldQ; // 找不到则保留原题（安全回退）
+      });
+      quizQuestions = updatedQuestions;
+      // 更新当前题目的引用
+      if (currentIndex < quizQuestions.length) {
+        currentQuestion = quizQuestions[currentIndex];
       }
     }
 
     let lastScore = null;
     let currentQuestion = null;
     let quizQuestions = [], currentIndex = 0, score = 0, selectedOptions = null;
-    // 记录用户每道题的选择，用于返回
-    let userAnswers = []; // 每个元素：{ type, selected }
+    let userAnswers = [];
 
     const bgm = document.getElementById('bgm');
     const musicToggle = document.getElementById('musicToggle');
@@ -394,12 +377,6 @@
       if (!musicStarted) { bgm.play().then(() => { musicStarted = true; musicToggle.classList.remove('paused'); }).catch(() => {}); }
     }, { once: true });
 
-    const characterImages = {
-      master: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-master.png',
-      ranger: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-ranger.png',
-      apprentice: 'https://cdn.jsdelivr.net/gh/chenzheng0809-gif/flagos-assets@main/flag-apprentice.png'
-    };
-
     function openLightbox(url) {
       document.getElementById('lightboxImg').src = url;
       document.getElementById('lightbox').classList.remove('hidden');
@@ -410,17 +387,6 @@
       const url = characterImages[role] || '';
       const onClick = clickable ? `onclick="event.stopPropagation(); openLightbox('${url}')"` : '';
       return `<img src="${url}" alt="角色" style="width:${w}px; height:${h}px; border-radius:16px; object-fit:cover; box-shadow:0 0 15px #2a8cff; cursor:pointer;" ${onClick} onerror="this.style.display='none'">`;
-    }
-
-    function getCurrentQuestions() {
-      return t('questions');
-    }
-
-    const questionBankZh = i18n.zh.questions;
-    const questionBankEn = i18n.en.questions;
-
-    function getQuestionBank() {
-      return currentLang === 'zh' ? questionBankZh : questionBankEn;
     }
 
     function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -459,7 +425,7 @@
     }
 
     function startQuiz(){
-      const bank = getQuestionBank();
+      const bank = i18n[currentLang].questions;
       const singles = bank.filter(q=>q.type==='single');
       const multiples = bank.filter(q=>q.type==='multiple');
       quizQuestions = [...shuffle(singles).slice(0,6), ...shuffle(multiples).slice(0,4)];
@@ -479,11 +445,8 @@
       document.getElementById('questionHint').textContent = t('questionHint');
       const container=document.getElementById('optionsContainer');
       container.innerHTML='';
-
-      // 恢复已选中的答案
       const prev = userAnswers[currentIndex];
       selectedOptions = currentQuestion.type==='single' ? (prev ? prev.selected : null) : (prev ? [...prev.selected] : []);
-
       currentQuestion.options.forEach((opt,idx)=>{
         const item=document.createElement('div');
         item.className='option-item';
@@ -495,18 +458,11 @@
       });
       document.getElementById('nextBtn').disabled = currentQuestion.type==='single' ? (selectedOptions===null) : (selectedOptions.length===0);
       updateNextButtonText();
-      // 控制返回按钮
-      const backBtn = document.getElementById('backBtn');
-      if (currentIndex > 0) {
-        backBtn.style.visibility = 'visible';
-      } else {
-        backBtn.style.visibility = 'hidden';
-      }
+      document.getElementById('backBtn').style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
     }
 
     function goBackQuestion() {
       if (currentIndex <= 0) return;
-      // 保存当前选择
       userAnswers[currentIndex] = { type: currentQuestion.type, selected: selectedOptions };
       currentIndex--;
       renderQuestion();
@@ -536,7 +492,6 @@
         items.forEach((el,i)=>{ if(selectedOptions.includes(i)) el.classList.add('selected'); else el.classList.remove('selected'); });
         document.getElementById('nextBtn').disabled=selectedOptions.length===0;
       }
-      // 实时保存当前选择
       userAnswers[currentIndex] = { type: type, selected: selectedOptions };
     }
 
@@ -550,7 +505,6 @@
         correct=JSON.stringify(sortedUser)===JSON.stringify(sortedAns);
       }
       if(correct) score+=10;
-      // 保存答案后前进
       userAnswers[currentIndex] = { type: q.type, selected: selectedOptions };
       currentIndex++;
       if(currentIndex>=quizQuestions.length) finishQuiz();
@@ -596,7 +550,6 @@
       const btnText = t('retryBtn');
       const btnId = 'retryBtn';
       const commentHtml = data.comment ? `<p style="color:#b0cce5; font-style:italic; margin:6px 0;">“${data.comment}”</p>` : '';
-
       container.innerHTML = `
         <div class="char-figure">${figureHtml}</div>
         <div class="result-score">${sc} 分</div>
